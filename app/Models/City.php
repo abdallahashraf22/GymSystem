@@ -10,10 +10,10 @@ class City extends Model
     use HasFactory;
 
     public function user(){
-        $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, "manager_id");
     }
 
     public function branches(){
-        $this->hasMany(Branch::class);
+        return $this->hasMany(Branch::class);
     }
 }
