@@ -43,23 +43,23 @@ class User extends Authenticatable
     ];
 
     public function sessions(){
-        $this->belongsToMany(Session::class);
+        return $this->belongsToMany(Session::class);
     }
 
     public function city(){
-        $this->hasOne(City::class);
+        return $this->hasOne(City::class, "manager_id", "id");
     }
 
     public function branch(){
-        $this->hasOne(Branch::class);
+        return $this->hasOne(Branch::class);
     }
 
     public function branches(){
-        $this->belongsToMany(Branch::class);
+        return $this->belongsToMany(Branch::class);
     }
 
     public function packages(){
-        $this->hasMany(Package::class);
+        return $this->hasMany(Package::class);
     }
 
 
