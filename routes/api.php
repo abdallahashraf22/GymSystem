@@ -1,9 +1,9 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\BranchController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\CityManager;
 use App\Http\Controllers\UserController;
 
 /*
@@ -22,11 +22,20 @@ use App\Http\Controllers\UserController;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+##### City-Branches ##############
+Route::get('/citybranches', [BranchController::class, 'getAllBranches']);
+Route::post('/createbranch', [BranchController::class, 'createBranch']);
+Route::post('/editbranch/{branchId}', [BranchController::class, 'editBranch']);
+Route::delete('/deletebranch/{branchId}', [BranchController::class, 'deleteBranch']);
+#######################################
 
-Route::get('/citybranches', [CityManager::class, 'getAllBranches']);
-Route::post('/createbranch', [CityManager::class, 'createBranch']);
-Route::post('/editbranch/{branchId}', [CityManager::class, 'editBranch']);
-Route::delete('/deletebranch/{branchId}', [CityManager::class, 'deleteBranch']);
+##### Managers from User Controller ######
+Route::get('/managers', [UserController::class, "indexManagers"]);
+Route::post('/managers', [UserController::class, "storeManager"]);
+Route::post('/managers/{managerId}', [UserController::class, "updateManager"]);
+Route::delete('/managers/{managerId}', [UserController::class, "destroyManager"]);
+
+###########################
 
 ##### for JWT Auth ######
 Route::group([
