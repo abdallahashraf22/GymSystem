@@ -7,8 +7,10 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class User extends Authenticatable
+
+class User extends Authenticatable implements JWTSubject
 {
     use HasApiTokens, HasFactory, Notifiable;
 
@@ -21,6 +23,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        "role"
     ];
 
     /**
@@ -42,25 +45,49 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function sessions(){
-        $this->belongsToMany(Session::class);
+    public function sessions()
+    {
+        return $this->belongsToMany(Session::class);
     }
 
-    public function city(){
-        $this->hasOne(City::class);
+    public function city()
+    {
+        return $this->hasOne(City::class, "manager_id", "id");
     }
 
-    public function branch(){
-        $this->hasOne(Branch::class);
+    public function branch()
+    {
+        return $this->hasOne(Branch::class);
     }
 
-    public function branches(){
-        $this->belongsToMany(Branch::class);
+    public function branches()
+    {
+        return $this->belongsToMany(Branch::class);
     }
 
-    public function packages(){
-        $this->hasMany(Package::class);
+    public function packages()
+    {
+        return $this->hasMany(Package::class);
     }
 
 
+    /**
+     * Get the identifier that will be stored in the subject claim of the JWT.
+     *
+     * @return mixed
+     */
+    public function getJWTIdentifier()
+    {
+        return $this->getKey();
+    }
+
+    /**
+     * Return a key value array, containing any custom claims to be added to the JWT.
+     *
+     * @return array
+     */
+    public function getJWTCustomClaims()
+    {
+        return [];
+    }
 }
