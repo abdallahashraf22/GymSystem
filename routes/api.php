@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CityManager;
+use App\Http\Controllers\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,4 +35,9 @@ Route::group([
 ], function ($router) {
     Route::post('login', [AuthController::class, "login"]);
 });
+###########################
+
+##### for user Controller ######
+Route::get('/users', [UserController::class, "index"]);
+
 ###########################
