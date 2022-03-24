@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use Illuminate\Http\Request;
 use App\Models\City;
 use App\Models\User;
@@ -18,7 +19,6 @@ class CityManager extends Controller
             ->where("manager_id", "=", "1")
             ->first();
         return response()->json($managed_city->branches);
-
     }
 
     public function createBranch(Request $request)
@@ -38,13 +38,14 @@ class CityManager extends Controller
         $branch->update([
             "id" => $id,
             "name" => $request->name,
-            "city_id"=> $request->city_id
+            "city_id" => $request->city_id
             // There is a Problem here in key city_id
             // "city_id"=>$request->header('city_id')
         ]);
         $SuccessBranchUpdate = "Branch Updated Successfully";
         return response()->json($SuccessBranchUpdate);
     }
+
     public function deleteBranch(Request $request, $id)
     {
         $branch = Branch::findOrFail($id);
@@ -52,5 +53,4 @@ class CityManager extends Controller
         $SuccessBranchDelete = "Branch Deleted Successfully";
         return response()->json($SuccessBranchDelete);
     }
-
 }
