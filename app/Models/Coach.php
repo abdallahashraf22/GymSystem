@@ -9,7 +9,12 @@ class Coach extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'name',
+        'session_id'
+    ];
+
     public function sessions(){
-        $this->belongsToMany(Session::class);
+        return $this->belongsToMany(Session::class);
     }
 }
