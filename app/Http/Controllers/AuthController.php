@@ -23,7 +23,6 @@ class AuthController extends Controller
 
     public function login()
     {
-        // $user = User::where("email", "=", request()->email, "and", "password", "=", request()->password)->first();
 
         $credentials = request(['email', 'password']);
 
