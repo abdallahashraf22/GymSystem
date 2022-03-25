@@ -1,7 +1,8 @@
 <?php
-
+namespace App\Http\Controllers;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BranchController;
+use App\Http\Resources\SessionResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 // use App\Http\Controllers\CityManager;
@@ -68,4 +69,13 @@ Route::get('/gymmanagers', [GymMangerController::class, 'index']);
 Route::post('/gymmanagers', [GymMangerController::class, "store"]);
 Route::post('/gymmanagers/{gymmanager}', [GymMangerController::class, "update"]);
 Route::delete('/gymmanagers/{gymmanager}', [GymMangerController::class, "destroy"]);
+###########################
+
+
+#### Sessions routes #####
+Route::get('/sessions', [SessionController::class, 'index']);
+Route::post('/sessions', [SessionController::class, 'store']);
+Route::get('/sessions/{session}', [SessionController::class, 'show']);
+Route::put('/sessions/{session}', [SessionController::class, 'update']);
+Route::delete('/sessions/{session}', [SessionController::class, 'destroy']);
 ###########################
