@@ -23,10 +23,7 @@ class User extends Authenticatable implements JWTSubject
         'name',
         'email',
         'password',
-        "role",
-        "isbanned",
-        "national_id",
-        "image_url"
+        "role"
     ];
 
     /**
@@ -60,18 +57,9 @@ class User extends Authenticatable implements JWTSubject
 
     public function branch()
     {
-        return $this->hasOne(Branch::class);
+        return $this->belongsTo(Branch::class);
     }
 
-    public function branches()
-    {
-        return $this->belongsToMany(Branch::class);
-    }
-
-    public function packages()
-    {
-        return $this->hasMany(Package::class);
-    }
 
 
     /**
@@ -91,9 +79,6 @@ class User extends Authenticatable implements JWTSubject
      */
     public function getJWTCustomClaims()
     {
-        return [
-            "email" => $this->email,
-            "role" => $this->role,
-        ];
+        return [];
     }
 }

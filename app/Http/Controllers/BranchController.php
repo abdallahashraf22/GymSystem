@@ -1,22 +1,17 @@
 <?php
-
 namespace App\Http\Controllers;
-
-use Illuminate\Http\Request;
-use App\Models\City;
-use App\Models\User;
 use App\Models\Branch;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Database\Query\JoinClause;
+use App\Models\City;
+use Illuminate\Http\Request;
 
-class CityManager extends Controller
+class BranchController extends Controller
 {
     public function getAllBranches()
     {
         // Here we will get Loggedin Manager ID
 
         $managed_city = City::select("*")
-            ->where("manager_id", "=", "1")
+            ->where("id", "=", "1")
             ->first();
         return response()->json($managed_city->branches);
     }
