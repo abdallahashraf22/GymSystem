@@ -31,8 +31,7 @@ class GymMangerController extends Controller
 
             return response()->json($e->getMessage());
         }
-        $message = "branch manager adde successfully";
-        return response()->json($message);
+        return response()->json($manager);
     }
 
     public function update(Request $request, $managerId)
@@ -47,8 +46,7 @@ class GymMangerController extends Controller
             "image_url" => $request->image_url,
             "branch_id" => $request->branch_id
         ]);
-        $message = "Manager Updated Successfully";
-        return response()->json($message);
+        return response()->json($manager);
     }
 
     public function destroy(int $managerId)
