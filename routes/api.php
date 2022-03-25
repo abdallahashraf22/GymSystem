@@ -4,7 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BranchController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\CityManager;
+// use App\Http\Controllers\CityManager;
 use App\Http\Controllers\GymMangerController;
 
 use App\Http\Controllers\UserController;
@@ -63,5 +63,9 @@ Route::delete('/users/{user}', [UserController::class, "destroy"]);
 
 
 
-// gym managers routs
+#### gym managers routs #####
 Route::get('/gymmanagers', [GymMangerController::class, 'index']);
+Route::post('/gymmanagers', [GymMangerController::class, "store"]);
+Route::post('/gymmanagers/{gymmanager}', [GymMangerController::class, "update"]);
+Route::delete('/gymmanagers/{gymmanager}', [GymMangerController::class, "destroy"]);
+###########################
