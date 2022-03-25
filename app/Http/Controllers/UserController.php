@@ -15,10 +15,15 @@ class UserController extends Controller
         return response()->json($users);
     }
 
+    public function show(int $id)
+    {
+        $user = User::find($id);
+        return response()->json($user);
+    }
+
     public function store(Request $request)
     {
         try {
-
             $user = User::create([
                 'name' => $request->name,
                 'email' => $request->email,
@@ -41,7 +46,6 @@ class UserController extends Controller
         $user->name = request()->name;
         $user->email = request()->email;
         $user->isbanned = false;
-        $user->password = bcrypt(request()->password);
         $user->national_id = request()->national_id;
         $user->image_url = request()->image_url;
 
