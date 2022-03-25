@@ -4,6 +4,8 @@ use App\Http\Controllers\AuthController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CityManager;
+use App\Http\Controllers\GymMangerController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -35,3 +37,7 @@ Route::group([
     Route::post('login', [AuthController::class, "login"]);
 });
 ###########################
+
+
+// gym managers routs
+Route::get('/gymmanagers', [GymMangerController::class, 'index']);
