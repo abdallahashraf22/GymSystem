@@ -28,6 +28,7 @@ use App\Http\Controllers\UserController;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
 ##### City-Branches ##############
 Route::get('/citybranches', [BranchController::class, 'getAllBranches']);
 Route::post('/createbranch', [BranchController::class, 'createBranch']);
@@ -40,7 +41,6 @@ Route::get('/managers', [UserController::class, "indexManagers"]);
 Route::post('/managers', [UserController::class, "storeManager"]);
 Route::post('/managers/{managerId}', [UserController::class, "updateManager"]);
 Route::delete('/managers/{managerId}', [UserController::class, "destroyManager"]);
-
 ###########################
 
 ##### for JWT Auth ######
@@ -69,7 +69,7 @@ Route::get('/gymmanagers', [GymMangerController::class, 'index']);
 Route::post('/gymmanagers', [GymMangerController::class, "store"]);
 Route::post('/gymmanagers/{gymmanager}', [GymMangerController::class, "update"]);
 Route::delete('/gymmanagers/{gymmanager}', [GymMangerController::class, "destroy"]);
-###########################
+#############################
 
 
 #### Sessions routes #####
