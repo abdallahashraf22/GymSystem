@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
-            $table->string("national_id")->uniqid();
+            $table->string("national_id")->unique();
             $table->boolean("isbanned")->default(false);
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
