@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\CityManager;
+use App\Http\Controllers\CityManagerController;
 use App\Http\Controllers\UserController;
 /*
 |--------------------------------------------------------------------------
