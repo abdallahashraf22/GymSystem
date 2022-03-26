@@ -49,6 +49,12 @@ class GymMangerController extends Controller
         return response()->json($manager);
     }
 
+    public function show($id)
+    {
+        $manager = User::find($id);
+        return response()->json($manager);
+    }
+
     public function destroy(int $managerId)
     {
         $message = "";

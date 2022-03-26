@@ -73,65 +73,64 @@ class UserController extends Controller
     }
 
 
-    # Branch Managers
-    public function indexManagers()
+    # City Managers
+    public function indexCityManagers()
     {
-        // Here 1 is the City_Id as Static Value
-        $branches = Branch::where("city_id", 1)->get("id");
-        $managers = DB::table('users')
-            ->select('*')
-            ->where("role", "=", "branch manager")
-            ->whereIn('branch_id', $branches)
-            ->get();
-        return response()->json($managers);
+        $cityManagers = User::where("role", "city manager")->get();
+        return response()->json($cityManagers);
     }
 
-    public function storeManager(Request $request)
+    public function showCityManager(int $id)
+    {
+        $cityManager = User::find($id);
+        return response()->json($cityManager);
+    }
+
+    public function storeCityManager(Request $request)
     {
         try {
-            $manager = User::create([
+            $cityManager = User::create([
                 'name' => $request->name,
                 'email' => $request->email,
                 'isbanned' => false,
                 'password' => bcrypt($request->password),
                 'national_id' => $request->national_id,
-                'role' => "branch manager",
+                'role' => "city manager",
                 'image_url' => $request->image_url,
-                'branch_id' => $request->branch_id
             ]);
         } catch (\Exception $e) {
 
             return response()->json($e->getMessage());
         }
 
-        return response()->json($manager);
+        return response()->json($cityManager);
     }
 
-    public function updateManager(Request $request, $managerId)
+    public function updateCityManager(Request $request, int $cityManagerId)
     {
-        $manager = User::findOrFail($managerId);
-        $manager->update([
+        $cityManager = User::findOrFail($cityManagerId);
+        $cityManager->update([
             "name" => $request->name,
             "email" => $request->email,
             "isbanned" => $request->isbanned,
             "password" => $request->password,
             "national_id" => $request->national_id,
             "image_url" => $request->image_url,
-            "branch_id" => $request->branch_id
         ]);
-        $SuccessManagerUpdate = "Manager Updated Successfully";
-        return response()->json($SuccessManagerUpdate);
+        $SuccessCityManagerUpdate = "City Manager Updated Successfully";
+        return response()->json($SuccessCityManagerUpdate);
     }
 
-    public function destroyManager(int $managerId)
+    public function destroyCityManager(int $id)
     {
-        if (!$manager = User::findOrFail($managerId))
+        if (!$user = User::find($id))
             return "not found";
         try {
-            $manager->delete();
+            $user->delete();
         } catch (\Exception $e) {
             return response()->json($e);
         }
         return response()->json(["isSuccess" => true]);
     }
+
 }
