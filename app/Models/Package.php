@@ -7,13 +7,22 @@ use Illuminate\Database\Eloquent\Model;
 
 class Package extends Model
 {
+
+    protected $fillable = [
+        'name',
+        'price',
+        'number_of_sessions'
+    ];
+
     use HasFactory;
 
-    public function users(){
+    public function users()
+    {
         $this->belongsToMany(User::class);
     }
 
-    public function branches(){
+    public function branches()
+    {
         $this->belongsToMany(Branch::class);
     }
 }
