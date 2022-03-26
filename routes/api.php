@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 // use App\Http\Controllers\CityManagerController;
 use App\Http\Controllers\GymMangerController;
+use App\Http\Controllers\PackageController;
 
 use App\Http\Controllers\UserController;
 
@@ -78,6 +79,7 @@ Route::delete('/citymanagers/{citymanager}', [UserController::class, "destroyCit
 #### gym managers routs #####
 Route::get('/gymmanagers', [GymMangerController::class, 'index']);
 Route::post('/gymmanagers', [GymMangerController::class, "store"]);
+Route::get('/gymmanagers/{gymmanager}', [GymMangerController::class, 'show']);
 Route::post('/gymmanagers/{gymmanager}', [GymMangerController::class, "update"]);
 Route::delete('/gymmanagers/{gymmanager}', [GymMangerController::class, "destroy"]);
 #############################
@@ -89,4 +91,14 @@ Route::post('/sessions', [SessionController::class, 'store']);
 Route::get('/sessions/{session}', [SessionController::class, 'show']);
 Route::put('/sessions/{session}', [SessionController::class, 'update']);
 Route::delete('/sessions/{session}', [SessionController::class, 'destroy']);
+###########################
+
+
+
+#### packages routes #####
+Route::get('/packages', [PackageController::class, 'index']);
+Route::post('/packages', [PackageController::class, 'store']);
+Route::get('/packages/{package}', [PackageController::class, 'show']);
+Route::put('/packages/{package}', [PackageController::class, 'update']);
+Route::delete('/packages/{package}', [PackageController::class, 'destroy']);
 ###########################
