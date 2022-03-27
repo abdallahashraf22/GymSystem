@@ -9,15 +9,23 @@ class Session extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'name',
+        'branch_id',
+        'start_time',
+        'end_time',
+        'coach_id'
+        ];
+
     public function coaches(){
-        $this->belongsToMany(Coach::class);
+        return $this->belongsToMany(Coach::class);
     }
 
     public function users(){
-        $this->belongsToMany(User::class);
+        return $this->belongsToMany(User::class);
     }
 
     public function branch(){
-        $this->belongsTo(Branch::class);
+        return $this->belongsTo(Branch::class);
     }
 }
