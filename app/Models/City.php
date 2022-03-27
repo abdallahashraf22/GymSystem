@@ -9,11 +9,13 @@ class City extends Model
 {
     use HasFactory;
 
-    public function user(){
-        $this->belongsTo(User::class);
+    public function user()
+    {
+        return $this->belongsTo(User::class, "manager_id");
     }
 
-    public function branches(){
-        $this->hasMany(Branch::class);
+    public function branches()
+    {
+        return $this->hasMany(Branch::class);
     }
 }
