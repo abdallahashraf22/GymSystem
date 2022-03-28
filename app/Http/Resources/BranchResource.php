@@ -2,10 +2,9 @@
 
 namespace App\Http\Resources;
 
-use App\Models\Branch;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class SessionResource extends JsonResource
+class BranchResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,12 +15,9 @@ class SessionResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'id'=> $this->id,
-            'name'=> $this->name,
-            'branch_name' => $this->branch->name,
-            'start_time' => $this->start_time,
-            'end_time' => $this->end_time,
-            'coaches' => CoachResource::collection($this->coaches)
+
+            'name'=>$this->name,
+
         ];
     }
 }

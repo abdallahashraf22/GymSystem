@@ -27,7 +27,7 @@ class SessionController extends Controller
                 'start_time' => $request->start_time,
                 'end_time' =>$request ->end_time,
             ]);
-            $session->coaches()->sync(explode(",", $request->coaches));
+            $session->coaches()->sync($request->coaches);
         }catch(\Exception $e){
             return response()->json($e->getMessage());
         }
@@ -40,7 +40,6 @@ class SessionController extends Controller
         if(!Session::find($id)){
             return response()->json($message);
         }
-
         try{
             $session = Session::findOrFail($id);
             $session->delete($id);

@@ -102,3 +102,7 @@ Route::get('/packages/{package}', [PackageController::class, 'show']);
 Route::put('/packages/{package}', [PackageController::class, 'update']);
 Route::delete('/packages/{package}', [PackageController::class, 'destroy']);
 ###########################
+
+
+#### coaches routes ####
+Route::get('/coaches', [CoachController::class, 'index']);
