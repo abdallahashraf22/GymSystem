@@ -66,11 +66,12 @@ Route::post('/users/{user}', [UserController::class, "update"]);
 Route::delete('/users/{user}', [UserController::class, "destroy"]);
 ###############################
 
+
 ###### CityManagers from UserController ######
 Route::get('/citymanagers', [UserController::class, "indexCityManagers"]);
 Route::get('/citymanagers/{citymanager}', [UserController::class, "showCityManager"]);
 Route::post('/citymanagers', [UserController::class, "storeCityManager"]);
-Route::post('/citymanagers/{citymanager}', [UserController::class, "updateCityManager"]);
+Route::put('/citymanagers/{citymanager}', [UserController::class, "updateCityManager"]);
 Route::delete('/citymanagers/{citymanager}', [UserController::class, "destroyCityManager"]);
 ###############################
 

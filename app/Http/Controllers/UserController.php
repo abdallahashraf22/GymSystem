@@ -6,6 +6,7 @@ use App\Models\Branch;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use PhpParser\Node\Expr\Cast\String_;
 use Ramsey\Uuid\Type\Integer;
 
 class UserController extends Controller
@@ -108,14 +109,15 @@ class UserController extends Controller
 
     public function updateCityManager(Request $request, int $cityManagerId)
     {
+        // Make it Number here
         $cityManager = User::findOrFail($cityManagerId);
         $cityManager->update([
-            "name" => $request->name,
-            "email" => $request->email,
-            "isbanned" => $request->isbanned,
-            "password" => $request->password,
-            "national_id" => $request->national_id,
-            "image_url" => $request->image_url,
+            "name" => $request->header("name"),
+            "email" => $request->header("email"),
+            // "isbanned" => $request->header("isbanned"),
+            // "password" => $request->header("password"),
+            "national_id" => $request->header("nationalid"),
+            "image_url" => $request->header("imageurl"),
         ]);
         $SuccessCityManagerUpdate = "City Manager Updated Successfully";
         return response()->json($SuccessCityManagerUpdate);
@@ -132,5 +134,4 @@ class UserController extends Controller
         }
         return response()->json(["isSuccess" => true]);
     }
-
 }
