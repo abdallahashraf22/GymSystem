@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Package;
 use App\Http\Resources\SessionResource;
+use Illuminate\Support\Facades\Log;
 
 class PackageController extends Controller
 {
@@ -25,7 +26,7 @@ class PackageController extends Controller
         $image = $request->file('image');
         $ext = $image->getClientOriginalExtension();
         // dd($ext);
-        $imageName = $request->name . uniqid() . ".$ext";
+        $imageName = "assets/images/packages/" .  uniqid() . ".$ext";
         $image->move(public_path('assets/images/packages'), $imageName);
         // dd($data, $name);
 
@@ -51,17 +52,23 @@ class PackageController extends Controller
 
     public function destroy($id)
     {
+        $package = Package::find($id);
+
+        Log::debug($package);
+        Log::debug(request()->all());
+
         $message = "Package was not found";
-        if (!Package::find($id)) {
+        if (!$package) {
             return response()->json($message);
+            Log::debug("if no package");
         }
 
+        Log::debug("before try");
         try {
-            $package = Package::findOrFail($id);
-            if ($package->image !== null) {
-                unlink(public_path('assets/images/packages/') . $package->image);
-            }
-            $package->delete($id);
+            Log::debug("start try");
+            Log::debug($package->image);
+            $package->delete();
+            Log::debug("after delete");
             $message = "Package Deleted Successfully";
             return response()->json($message);
         } catch (\Exception $e) {
