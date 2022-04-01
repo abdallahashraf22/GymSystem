@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Traits\ResponseTrait;
 use App\Models\Branch;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -11,11 +12,47 @@ use Ramsey\Uuid\Type\Integer;
 
 class UserController extends Controller
 {
+    use ResponseTrait;
+
+    public function __construct()
+    {
+    }
+
     # Normal Users
     public function index()
     {
         $users = User::where("role", "user")->get();
         return response()->json($users);
+    }
+
+    public function index2()
+    {
+        $sortField = request('sortField', "created_at");
+        if (in_array($sortField, ['name', 'email', 'created_at']))
+            $sortField = "created_at";
+
+        $sortDirection = request('sortDirection', "desc");
+        if (in_array($sortDirection, ['asc', 'desc']))
+            $sortDirection = "desc";
+
+        try {
+            $users = User::where("role", "user")->when(request("search"), function ($q) {
+                $q->where(function ($query) {
+                    $query->where("name", "like", "%" . request("search") . "%")->orWhere("email", "like", "%" . request("search") . "%");
+                });
+            })->orderBy($sortField, $sortDirection)->paginate(3);
+        } catch (\Throwable $th) {
+            return $this->createResponse(500, [], false, "server error");
+        }
+
+        $users = User::where("role", "user")->when(request("search"), function ($q) {
+            $q->where(function ($query) {
+                $query->where("name", "like", "%" . request("search") . "%")->orWhere("email", "like", "%" . request("search") . "%");
+            });
+        })->orderBy($sortField, $sortDirection)->paginate(3);
+
+        //$users = User::where("role", "user")->get();
+        return $this->createResponse(200, $users);
     }
 
     public function show(int $id)
