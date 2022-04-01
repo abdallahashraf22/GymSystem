@@ -20,8 +20,13 @@ class UserController extends Controller
     # Normal Users
     public function index()
     {
-        $users = User::where("role", "user")->get();
-        return response()->json($users);
+        try {
+            $users = User::where("role", "user")->get();
+        } catch (\Exception $e) {
+
+            return $this->createResponse(500, [], false, "server error");
+        }
+        return $this->createResponse(200, $users);
     }
 
     public function paginate()
@@ -56,8 +61,12 @@ class UserController extends Controller
 
     public function show(int $id)
     {
-        $user = User::find($id);
-        return response()->json($user);
+        try {
+            $user = User::find($id);
+        } catch (\Exception $e) {
+            return $this->createResponse(500, [], false, "server error");
+        }
+        return $this->createResponse(200, $user);
     }
 
     public function store(CreateUserRequest $request)
@@ -91,22 +100,29 @@ class UserController extends Controller
         try {
             $user->save();
         } catch (\Exception $e) {
-            return response()->json($e);
+            return $this->createResponse(500, [], false, "server error");
         }
 
-        return response()->json($user);
+        return $this->createResponse(200, $user);
     }
 
     public function destroy(int $id)
     {
+
         if (!$user = User::find($id))
             return "not found";
         try {
-            $user->delete();
+            $user->isDeleted = true;
+            $user->save();
         } catch (\Exception $e) {
             return response()->json($e);
         }
-        return response()->json(["isSuccess" => true]);
+        // try {
+        //     $user->delete();
+        // } catch (\Exception $e) {
+        //     return response()->json($e);
+        // }
+        return $this->createResponse(200, "deleted successfully");
     }
 
 

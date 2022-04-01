@@ -9,15 +9,6 @@ class UpdateUserRequest extends FormRequest
 {
     use ResponseTrait;
 
-    public static function getRules()
-    {
-        // return [
-        //     "name" => ["required"],
-        //     "email" => ["required", "unique:users,email,{$this->id}"],
-        //     "password" => ["required"],
-        //     "national_id" => ["required", "unique:users,national_id,{$this->id}"],
-        // ];
-    }
     /**
      * Determine if the user is authorized to make this request.
      *

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Scopes\IsDeletedScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -12,8 +13,19 @@ class Package extends Model
         'name',
         'price',
         'number_of_sessions',
-        'image'
+        'image',
+        "isDeleted"
     ];
+
+    /**
+     * The "booted" method of the model.
+     *
+     * @return void
+     */
+    protected static function booted()
+    {
+        static::addGlobalScope(new IsDeletedScope);
+    }
 
     use HasFactory;
 

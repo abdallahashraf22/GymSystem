@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Scopes\IsDeletedScope;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -25,8 +26,19 @@ class User extends Authenticatable implements JWTSubject
         'password',
         "role",
         "national_id",
-        "image_url"
+        "image_url",
+        "isDeleted"
     ];
+
+    /**
+     * The "booted" method of the model.
+     *
+     * @return void
+     */
+    protected static function booted()
+    {
+        static::addGlobalScope(new IsDeletedScope);
+    }
 
     /**
      * The attributes that should be hidden for serialization.
@@ -36,6 +48,7 @@ class User extends Authenticatable implements JWTSubject
     protected $hidden = [
         'password',
         'remember_token',
+        "isDeleted"
     ];
 
     /**
