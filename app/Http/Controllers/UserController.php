@@ -2,13 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\User\CreateUserRequest;
 use App\Http\Traits\ResponseTrait;
-use App\Models\Branch;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use PhpParser\Node\Expr\Cast\String_;
-use Ramsey\Uuid\Type\Integer;
+use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
@@ -63,6 +61,13 @@ class UserController extends Controller
 
     public function store(Request $request)
     {
+
+
+        $Validator = Validator::make(request()->all(), CreateUserRequest::getRules());
+
+        if ($Validator->fails()) {
+            return $this->createResponse(400, [], false, $Validator->errors());
+        }
         try {
             $user = User::create([
                 'name' => $request->name,
@@ -75,10 +80,10 @@ class UserController extends Controller
             ]);
         } catch (\Exception $e) {
 
-            return response()->json($e->getMessage());
+            return $this->createResponse(500, [], false, "server error");
         }
 
-        return response()->json($user);
+        return $this->createResponse(200, $user);
     }
 
     public function update(User $user)
