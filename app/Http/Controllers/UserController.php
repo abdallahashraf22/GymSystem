@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\User\CreateUserRequest;
+use App\Http\Requests\User\UpdateUserRequest;
 use App\Http\Traits\ResponseTrait;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -59,15 +60,8 @@ class UserController extends Controller
         return response()->json($user);
     }
 
-    public function store(Request $request)
+    public function store(CreateUserRequest $request)
     {
-
-
-        $Validator = Validator::make(request()->all(), CreateUserRequest::getRules());
-
-        if ($Validator->fails()) {
-            return $this->createResponse(400, [], false, $Validator->errors());
-        }
         try {
             $user = User::create([
                 'name' => $request->name,
@@ -86,7 +80,7 @@ class UserController extends Controller
         return $this->createResponse(200, $user);
     }
 
-    public function update(User $user)
+    public function update(UpdateUserRequest $request, User $user)
     {
         $user->name = request()->name;
         $user->email = request()->email;
