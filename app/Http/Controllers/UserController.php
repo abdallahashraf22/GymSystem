@@ -25,7 +25,7 @@ class UserController extends Controller
         return response()->json($users);
     }
 
-    public function index2()
+    public function paginate()
     {
         $sortField = request('sortField', "created_at");
         if (in_array($sortField, ['name', 'email', 'created_at']))

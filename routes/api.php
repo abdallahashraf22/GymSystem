@@ -60,7 +60,7 @@ Route::group([
 
 ##### users from UserController ######
 Route::get('/users', [UserController::class, "index"]);
-Route::get('/users2', [UserController::class, "index2"]);
+Route::get('/users/paginate', [UserController::class, "paginate"]);
 Route::get('/users/{user}', [UserController::class, "show"]);
 Route::post('/users', [UserController::class, "store"]);
 Route::post('/users/{user}', [UserController::class, "update"]);
