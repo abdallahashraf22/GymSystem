@@ -52,14 +52,13 @@ class SessionController extends Controller
 
     public function update(Request $request, $session_id){
         $session = Session::findOrFail($session_id);
-
         $session ->update([
             'name'=> $request->name,
             'branch_id'=> $request->branch_id,
             'start_time' => $request->start_time,
             'end_time' =>$request ->end_time,
         ]);
-        $session->coaches()->sync(explode(",", $request->coaches));
+        $session->coaches()->sync($request->coaches);
         $success_message = "Session was updated successfully";
         return response()->json($success_message);
     }
