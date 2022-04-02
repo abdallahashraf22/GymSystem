@@ -32,11 +32,11 @@ class UserController extends Controller
     public function paginate()
     {
         $sortField = request('sortField', "created_at");
-        if (in_array($sortField, ['name', 'email', 'created_at']))
+        if (!in_array($sortField, ['name', 'email', 'created_at']))
             $sortField = "created_at";
 
         $sortDirection = request('sortDirection', "desc");
-        if (in_array($sortDirection, ['asc', 'desc']))
+        if (!in_array($sortDirection, ['asc', 'desc']))
             $sortDirection = "desc";
 
         try {
