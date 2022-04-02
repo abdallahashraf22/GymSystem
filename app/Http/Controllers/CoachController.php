@@ -11,6 +11,7 @@ class CoachController extends Controller
     public function index(){
         $coach = Coach::get();
         return CoachResource::collection($coach);
+        return response()->json($coach);
     }
 
     public function show($id){
