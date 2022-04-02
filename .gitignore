@@ -30,3 +30,4 @@ Homestead.yaml
 Homestead.json
 /.vagrant
 .phpunit.result.cache
+public\assets\images\packages

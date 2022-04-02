@@ -22,22 +22,28 @@ class PackageController extends Controller
 
     public function store(Request $request)
     {
+        if ($request->file('image') != null) {
+            $image = $request->file('image');
+            $ext = $image->getClientOriginalExtension();
+            // dd($ext);
+            $imageName = "assets/images/packages/" .  uniqid() . ".$ext";
+            $image->move(public_path('assets/images/packages'), $imageName);
+            // dd($data, $name);
+        } else {
+            $imageName = "assets/images/noImageYet.jpg";
+        }
 
-        $image = $request->file('image');
-        $ext = $image->getClientOriginalExtension();
-        // dd($ext);
-        $imageName = "assets/images/packages/" .  uniqid() . ".$ext";
-        $image->move(public_path('assets/images/packages'), $imageName);
-        // dd($data, $name);
+
 
         $request->validate([
             'name' => ['required', 'min:3'],
             'price' => ['required'],
-
         ]);
 
+
+
         try {
-            Package::create([
+            $package = Package::create([
                 'name' => $request->name,
                 'price' => $request->price,
                 'number_of_sessions' => $request->number_of_sessions,
@@ -47,28 +53,20 @@ class PackageController extends Controller
             return response()->json($e->getMessage());
         }
         $success_message = "Package was created successfully";
-        return response()->json($success_message);
+        return response()->json(["result" => $success_message, "package" => $package]);
     }
 
     public function destroy($id)
     {
         $package = Package::find($id);
 
-        Log::debug($package);
-        Log::debug(request()->all());
-
         $message = "Package was not found";
         if (!$package) {
             return response()->json($message);
-            Log::debug("if no package");
         }
 
-        Log::debug("before try");
         try {
-            Log::debug("start try");
-            Log::debug($package->image);
             $package->delete();
-            Log::debug("after delete");
             $message = "Package Deleted Successfully";
             return response()->json($message);
         } catch (\Exception $e) {
@@ -81,27 +79,45 @@ class PackageController extends Controller
         $package = Package::findOrFail($package_id);
         if ($package->image !== null) {
             $imageName = $package->image;
-        }
 
-        if ($request->hasFile('image')) {
-            if ($imageName != null) {
-                unlink(public_path('assets/images/packages/') . $imageName);
+
+            if ($request->hasFile('image')) {
+                // if ($imageName != null) {
+                //     // unlink(public_path('assets/images/packages/') . $imageName);
+                // }
+                $image = $request->file('image');
+                $ext = $image->getClientOriginalExtension();
+                // dd($ext);
+                $imageName = uniqid() . ".$ext";
+                $image->move(public_path('assets/images/packages'), $imageName);
+                // dd($data, $name);
+                $imageName = 'assets/images/packages/' . $imageName;
             }
-            $image = $request->file('image');
-            $ext = $image->getClientOriginalExtension();
-            // dd($ext);
-            $imageName = $request->name . uniqid() . ".$ext";
-            $image->move(public_path('assets/images/packages'), $imageName);
-            // dd($data, $name);
-        }
+            try {
+                $package->update([
+                    'name' => $request->name,
+                    'price' => $request->price,
+                    'number_of_sessions' => $request->number_of_sessions,
+                    'image' => $imageName
+                ]);
+                $success_message = "Package was updated successfully";
+                return response()->json(["message" => $success_message, "package" => $package]);
+            } catch (\Exception $e) {
+                return response()->json($e);
+            }
+        } else {
+            try {
+                $package->update([
+                    'name' => $request->name,
+                    'price' => $request->price,
+                    'number_of_sessions' => $request->number_of_sessions,
+                ]);
+                $success_message = "Package was updated successfully";
+                return response()->json($success_message);
+            } catch (\Exception $e) {
+                return response()->json($e);
+            }
+        } //else condition
 
-        $package->update([
-            'name' => $request->name,
-            'price' => $request->price,
-            'number_of_sessions' => $request->number_of_sessions,
-            'image' => $imageName
-        ]);
-        $success_message = "Package was updated successfully";
-        return response()->json($success_message);
-    }
+    } //end of update request
 }

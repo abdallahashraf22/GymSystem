@@ -101,7 +101,7 @@ Route::delete('/sessions/{session}', [SessionController::class, 'destroy']);
 Route::get('/packages', [PackageController::class, 'index']);
 Route::post('/packages', [PackageController::class, 'store']);
 Route::get('/packages/{package}', [PackageController::class, 'show']);
-Route::put('/packages/{package}', [PackageController::class, 'update']);
+Route::post('/packages/{package}', [PackageController::class, 'update']);
 Route::delete('/packages/{package}', [PackageController::class, 'destroy']);
 ###########################
 
