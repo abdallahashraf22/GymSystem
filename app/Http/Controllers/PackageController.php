@@ -5,10 +5,14 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Package;
 use App\Http\Resources\SessionResource;
+use App\Http\Traits\UploadImageTrait;
 use Illuminate\Support\Facades\Log;
 
 class PackageController extends Controller
 {
+
+    use UploadImageTrait;
+
     public function index()
     {
         $package = Package::get();
@@ -22,16 +26,19 @@ class PackageController extends Controller
 
     public function store(Request $request)
     {
-        if ($request->file('image') != null) {
-            $image = $request->file('image');
-            $ext = $image->getClientOriginalExtension();
-            // dd($ext);
-            $imageName = "assets/images/packages/" .  uniqid() . ".$ext";
-            $image->move(public_path('assets/images/packages'), $imageName);
-            // dd($data, $name);
-        } else {
-            $imageName = "assets/images/noImageYet.jpg";
-        }
+        // if ($request->file('image') != null) {
+        //     $image = $request->file('image');
+        //     $ext = $image->getClientOriginalExtension();
+        //     // dd($ext);
+        //     $imageName = "assets/images/packages/" .  uniqid() . ".$ext";
+        //     $image->move(public_path('assets/images/packages'), $imageName);
+        //     // dd($data, $name);
+        // } else {
+        //     $imageName = "assets/images/noImageYet.jpg";
+        // }
+
+        $imageName = $this->uploadImage("packages", $request->file('image'));
+
 
 
 
@@ -85,13 +92,14 @@ class PackageController extends Controller
                 // if ($imageName != null) {
                 //     // unlink(public_path('assets/images/packages/') . $imageName);
                 // }
-                $image = $request->file('image');
-                $ext = $image->getClientOriginalExtension();
-                // dd($ext);
-                $imageName = uniqid() . ".$ext";
-                $image->move(public_path('assets/images/packages'), $imageName);
-                // dd($data, $name);
-                $imageName = 'assets/images/packages/' . $imageName;
+                // $image = $request->file('image');
+                // $ext = $image->getClientOriginalExtension();
+                // // dd($ext);
+                // $imageName = uniqid() . ".$ext";
+                // $image->move(public_path('assets/images/packages'), $imageName);
+                // // dd($data, $name);
+                // $imageName = 'assets/images/packages/' . $imageName;
+                $imageName = $this->uploadImage("packages", $request->file('image'));
             }
             try {
                 $package->update([
