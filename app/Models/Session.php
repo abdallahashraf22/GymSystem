@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Scopes\IsDeletedScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -14,18 +15,32 @@ class Session extends Model
         'branch_id',
         'start_time',
         'end_time',
-        'coach_id'
-        ];
+        'coach_id',
+        "isDeleted"
+    ];
 
-    public function coaches(){
+    /**
+     * The "booted" method of the model.
+     *
+     * @return void
+     */
+    protected static function booted()
+    {
+        static::addGlobalScope(new IsDeletedScope);
+    }
+
+    public function coaches()
+    {
         return $this->belongsToMany(Coach::class);
     }
 
-    public function users(){
+    public function users()
+    {
         return $this->belongsToMany(User::class);
     }
 
-    public function branch(){
+    public function branch()
+    {
         return $this->belongsTo(Branch::class);
     }
 }

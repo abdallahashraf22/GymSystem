@@ -108,3 +108,7 @@ Route::delete('/packages/{package}', [PackageController::class, 'destroy']);
 
 #### coaches routes ####
 Route::get('/coaches', [CoachController::class, 'index']);
+Route::post('/coaches', [CoachController::class, 'store']);
+Route::get('/coaches/{coach}', [CoachController::class, 'show']);
+Route::put('/coaches/{coach}', [CoachController::class, 'update']);
+Route::delete('/coaches/{coach}', [CoachController::class, 'destroy']);

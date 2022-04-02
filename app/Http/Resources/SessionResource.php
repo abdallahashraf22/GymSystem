@@ -19,6 +19,7 @@ class SessionResource extends JsonResource
             'id'=> $this->id,
             'name'=> $this->name,
             'branch_name' => $this->branch->name,
+            'branch_id' => $this->branch->id,
             'start_time' => $this->start_time,
             'end_time' => $this->end_time,
             'coaches' => CoachResource::collection($this->coaches)
