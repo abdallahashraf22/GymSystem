@@ -28,22 +28,22 @@ class Branch extends Model
 
     public function city()
     {
-        $this->belongsTo(City::class);
+        return $this->belongsTo(City::class);
     }
 
 
     public function sessions()
     {
-        $this->hasMany(Session::class);
+        return $this->hasMany(Session::class);
     }
 
     public function users()
     {
-        $this->hasMany(User::class);
+        return $this->hasMany(User::class);
     }
 
     public function packages()
     {
-        $this->hasMany(Package::class);
+        return $this->hasMany(Package::class);
     }
 }

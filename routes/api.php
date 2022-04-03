@@ -119,3 +119,8 @@ Route::delete('/packages/{package}', [PackageController::class, 'destroy']);
 Route::apiResource("cities", CityController::class);
 //Route::get('/citymanagersids', [UserController::class, "indexCityManagers"]);
 #######################################
+
+
+#### coaches routes ####
+Route::get('/branches', [BranchController::class, 'index']);
+#######################################

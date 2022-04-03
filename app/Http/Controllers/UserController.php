@@ -53,7 +53,7 @@ class UserController extends Controller
             $q->where(function ($query) {
                 $query->where("name", "like", "%" . request("search") . "%")->orWhere("email", "like", "%" . request("search") . "%");
             });
-        })->orderBy($sortField, $sortDirection)->paginate(3);
+        })->orderBy($sortField, $sortDirection)->paginate(5);
 
         //$users = User::where("role", "user")->get();
         return $this->createResponse(200, $users);

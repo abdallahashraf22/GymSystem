@@ -36,7 +36,7 @@ class addadmin extends Command
                 'password' => bcrypt($this->argument("password")),
                 'national_id' => uniqid(),
                 'role' => "admin",
-                'image_url' => 0,
+                'image_url' => "assets/images/noImageYet.jpg",
             ]);
         } catch (\Exception $e) {
 
