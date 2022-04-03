@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\GymMangerController;
 use App\Http\Controllers\PackageController;
+use App\Http\Controllers\CityController;
 use App\Http\Controllers\UserController;
 
 /*
@@ -126,3 +127,7 @@ Route::apiResource("cities", CityController::class);
 Route::apiResource('sheets', AttendanceController::class);
 ################################################
 
+######### Cities Routes  ###############
+Route::apiResource("cities", CityController::class);
+//Route::get('/citymanagersids', [UserController::class, "indexCityManagers"]);
+#######################################
