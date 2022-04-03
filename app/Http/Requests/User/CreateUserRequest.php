@@ -37,7 +37,7 @@ class CreateUserRequest extends FormRequest
 
     protected function failedValidation(\Illuminate\Contracts\Validation\Validator $validator)
     {
-        $response = $this->createResponse(400, [], false, $validator->errors());
+        $response = $this->createResponse(200, [], false, $validator->errors());
 
         throw new \Illuminate\Validation\ValidationException($validator, $response);
     }
