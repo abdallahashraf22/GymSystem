@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\CityController;
+use App\Http\Controllers\CoachController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CityManagerController;
 use App\Http\Controllers\UserController;
@@ -17,5 +19,6 @@ use App\Http\Controllers\UserController;
 Route::get('/', function () {
     return view('welcome');
 });
+
 
 
