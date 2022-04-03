@@ -34,7 +34,7 @@ class addadmin extends Command
                 'email' => $this->argument("email"),
                 'isbanned' => false,
                 'password' => bcrypt($this->argument("password")),
-                'national_id' => 0,
+                'national_id' => uniqid(),
                 'role' => "admin",
                 'image_url' => 0,
             ]);
