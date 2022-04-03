@@ -10,11 +10,10 @@ class City extends Model
 {
     use HasFactory;
 
-    /**
-     * The "booted" method of the model.
-     *
-     * @return void
-     */
+    protected $fillable = [
+        'name',
+        'manager_id'
+    ];
     protected static function booted()
     {
         static::addGlobalScope(new IsDeletedScope);
