@@ -10,7 +10,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\GymMangerController;
 use App\Http\Controllers\PackageController;
-use App\Http\Controllers\CityController;
 use App\Http\Controllers\UserController;
 
 /*
