@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BranchController;
 use App\Http\Controllers\CityController;
-use App\Http\Resources\SessionResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\GymMangerController;
@@ -114,9 +113,7 @@ Route::delete('/coaches/{coach}', [CoachController::class, 'destroy']);
 Route::put('/packages/{package}', [PackageController::class, 'update']);
 Route::delete('/packages/{package}', [PackageController::class, 'destroy']);
 ###########################
-######### Branches Routes  ###############
-Route::apiResource("branches", BranchController::class);
-#######################################
+
 
 ######### Cities Routes  ###############
 Route::apiResource("cities", CityController::class);
@@ -129,4 +126,9 @@ Route::apiResource('sheets', AttendanceController::class);
 ######### Cities Routes  ###############
 Route::apiResource("cities", CityController::class);
 //Route::get('/citymanagersids', [UserController::class, "indexCityManagers"]);
+#######################################
+
+
+#### Branches routes ####
+Route::get('/branches', [BranchController::class, 'index']);
 #######################################
