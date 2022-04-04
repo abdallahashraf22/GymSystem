@@ -60,7 +60,7 @@ class BranchController extends Controller
                     $q->where(function ($query) {
                         $query->where("name", "like", "%" . request("search") . "%");
                     });
-                })->with('city')->orderBy($sortField, $sortDirection)->paginate(5);
+                })->with('city.manager')->orderBy($sortField, $sortDirection)->paginate(5);
         } catch (\Exception $e) {
             return $this->createResponse(500, [], false, "server error");
         }

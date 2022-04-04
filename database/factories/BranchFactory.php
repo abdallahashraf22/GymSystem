@@ -18,8 +18,8 @@ class BranchFactory extends Factory
     {
         return [
             'name' => $this->faker->name(),
-            'city_id' => 1,
-            
+            'city_id' => 2,
+
             'img' => "assets/images/noImageYet.jpg",
         ];
     }
