@@ -131,4 +131,5 @@ Route::apiResource("cities", CityController::class);
 
 #### Branches routes ####
 Route::get('/branches', [BranchController::class, 'index']);
+Route::get('/branches/paginate', [BranchController::class, "paginate"]);
 #######################################
