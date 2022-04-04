@@ -4,13 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BranchController;
-use App\Http\Resources\SessionResource;
+use App\Http\Controllers\CityController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-// use App\Http\Controllers\CityManagerController;
 use App\Http\Controllers\GymMangerController;
 use App\Http\Controllers\PackageController;
-
 use App\Http\Controllers\UserController;
 
 /*
@@ -112,3 +110,26 @@ Route::post('/coaches', [CoachController::class, 'store']);
 Route::get('/coaches/{coach}', [CoachController::class, 'show']);
 Route::put('/coaches/{coach}', [CoachController::class, 'update']);
 Route::delete('/coaches/{coach}', [CoachController::class, 'destroy']);
+Route::put('/packages/{package}', [PackageController::class, 'update']);
+Route::delete('/packages/{package}', [PackageController::class, 'destroy']);
+###########################
+
+
+######### Cities Routes  ###############
+Route::apiResource("cities", CityController::class);
+#######################################
+
+########### Show Attendance Table ##############
+Route::apiResource('sheets', AttendanceController::class);
+################################################
+
+######### Cities Routes  ###############
+Route::apiResource("cities", CityController::class);
+//Route::get('/citymanagersids', [UserController::class, "indexCityManagers"]);
+#######################################
+
+
+#### Branches routes ####
+Route::get('/branches', [BranchController::class, 'index']);
+Route::get('/branches/paginate', [BranchController::class, "paginate"]);
+#######################################
