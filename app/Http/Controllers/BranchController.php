@@ -12,6 +12,11 @@ class BranchController extends Controller
 {
     use ResponseTrait, PaginatorTrait;
 
+    public function __construct()
+    {
+        $this->middleware('isCityManager')->only(['paginate']);
+    }
+
     public function index()
     {
         $city_id = request('city_id', 1);
@@ -35,11 +40,7 @@ class BranchController extends Controller
             return $this->createResponse(500, [], false, "server error");
         }
 
-        $response = [
-            "data" => BranchResource::collection($branches),
-            "links" => $this->createPaginationLinks($branches->total(), 5)
-        ];
-        return $this->createResponse(200, $response);
+        return $this->createResponse(200, $branches);
     }
 
     public function paginate()
@@ -64,6 +65,8 @@ class BranchController extends Controller
         } catch (\Exception $e) {
             return $this->createResponse(500, [], false, "server error");
         }
+
+
 
         $response = [
             "data" => BranchResource::collection($branches),

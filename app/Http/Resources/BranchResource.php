@@ -21,7 +21,7 @@ class BranchResource extends JsonResource
             'image_url' => $this->img,
             'created_at' => $this->created_at,
             'city_name' => $this->city->name,
-            'manager_name' => $this->city->manager->name
+            'city_manager_name' => $this->city->manager->name
         ];
     }
 }
