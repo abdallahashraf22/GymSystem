@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Package;
+use App\Models\UserPackage;
 use App\Http\Resources\SessionResource;
 use App\Http\Traits\ResponseTrait;
 use App\Http\Traits\UploadImageTrait;
@@ -134,4 +135,23 @@ class PackageController extends Controller
         } //else condition
 
     } //end of update request
+
+    public function buyToUser(Request $request)
+    {
+        try {
+            $transaction = UserPackage::create([
+                'package_id' => $request->package_id,
+                'user_id' => $request->user_id,
+                'branch_id' => $request->branch_id,
+                'enrollement_price' => $request->enrollement_price,
+            ]);
+        } catch (\Exception $e) {
+            // return response()->json($e->getMessage());
+            return $this->createResponse(500, [], false, $e);
+            // return $this->createResponse(500, [], false, "server error");
+        }
+        $success_message = "transaction completed successfully";
+
+        return $this->createResponse(201, ["result" => $success_message, "transaction" => $transaction]);
+    } //end of buy to user
 }

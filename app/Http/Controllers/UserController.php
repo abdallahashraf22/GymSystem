@@ -186,4 +186,17 @@ class UserController extends Controller
         }
         return response()->json(["isSuccess" => true]);
     }
+
+    ////////////////////// get branch users /////////////////
+
+    public function getBranchUsers(int $id)
+    {
+        try {
+            $users = User::where("role", "user")->where("branch_id", $id)->get();
+        } catch (\Exception $e) {
+
+            return $this->createResponse(500, [], false, "server error");
+        }
+        return $this->createResponse(200, $users);
+    }
 }
