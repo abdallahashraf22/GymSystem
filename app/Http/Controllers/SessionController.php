@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Session\StoreSessionRequest;
 use App\Http\Resources\SessionResource;
 use App\Http\Resources\CoachResource;
 use App\Models\Session;
+use App\Rules\SessionOverlap;
 use Illuminate\Http\Request;
 
 class SessionController extends Controller
@@ -21,6 +23,11 @@ class SessionController extends Controller
 
     public function store(Request $request){
         try{
+            $request->validate(
+                ['start_time'=>new SessionOverlap(),
+                ]
+            );
+
             $session = Session::create([
                 'name' => $request->name,
                 'branch_id'=> $request->branch_id,
@@ -52,6 +59,11 @@ class SessionController extends Controller
 
     public function update(Request $request, $session_id){
         $session = Session::findOrFail($session_id);
+        $request->validate(
+            ['start_time'=>new SessionOverlap(),
+            ]
+        );
+
         $session ->update([
             'name'=> $request->name,
             'branch_id'=> $request->branch_id,
