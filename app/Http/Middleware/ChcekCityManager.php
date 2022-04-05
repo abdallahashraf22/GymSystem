@@ -25,6 +25,8 @@ class ChcekCityManager
 
         if ($payload['role'] == 'city manager')
             $request['city_id'] = $payload['city_id'];
+        if(!$request['city_id'])
+            $request['city_id'] = "all";
         return $next($request);
     }
 }

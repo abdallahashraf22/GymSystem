@@ -14,7 +14,7 @@ class BranchController extends Controller
 
     public function __construct()
     {
-        $this->middleware('isCityManager')->only(['paginate']);
+        $this->middleware('isCityManager')->only(['paginate', 'index']);
     }
 
     public function index()
@@ -30,7 +30,11 @@ class BranchController extends Controller
             $sortDirection = "desc";
 
         try {
-            $branches = Branch::where('city_id', $city_id)
+            $branches = Branch::when(request("city_id") != "all", function ($q) {
+                $q->where(function ($query) {
+                    $query->where('city_id', request("city_id"));
+                });
+            })
                 ->when(request("search"), function ($q) {
                     $q->where(function ($query) {
                         $query->where("name", "like", "%" . request("search") . "%");
