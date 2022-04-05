@@ -76,9 +76,9 @@ class SessionController extends Controller
         return response()->json($success_message);
     }
 
-    public function get_all_sessions()
+    public function get_old_sessions()
     {
-        $session = Session::get();
+        $session = Session::get()->where("end_time", "<=", now());
         return SessionResource::collection($session);
     }
 
