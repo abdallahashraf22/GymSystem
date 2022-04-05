@@ -31,6 +31,11 @@ class Branch extends Model
         return $this->belongsTo(City::class);
     }
 
+    public function cityManager()
+    {
+        return $this->hasOneThrough(User::class, City::class, "manager_id", 'city_id');
+    }
+
 
     public function sessions()
     {

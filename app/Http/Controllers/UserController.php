@@ -42,7 +42,8 @@ class UserController extends Controller
         try {
             $users = User::where("role", "user")->when(request("search"), function ($q) {
                 $q->where(function ($query) {
-                    $query->where("name", "like", "%" . request("search") . "%")->orWhere("email", "like", "%" . request("search") . "%");
+                    $query->where("name", "like", "%" . request("search") . "%")
+                        ->orWhere("email", "like", "%" . request("search") . "%");
                 });
             })->orderBy($sortField, $sortDirection)->paginate(3);
         } catch (\Throwable $th) {
@@ -82,7 +83,6 @@ class UserController extends Controller
                 'image_url' => $request->image_url,
             ]);
         } catch (\Exception $e) {
-
             return $this->createResponse(500, [], false, "server error");
         }
 
