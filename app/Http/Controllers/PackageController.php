@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Package;
+use App\Models\UserPackage;
 use App\Http\Resources\SessionResource;
+use App\Http\Traits\ResponseTrait;
 use App\Http\Traits\UploadImageTrait;
 use Illuminate\Support\Facades\Log;
 
@@ -12,6 +14,7 @@ class PackageController extends Controller
 {
 
     use UploadImageTrait;
+    use ResponseTrait;
 
     public function index()
     {
@@ -57,10 +60,12 @@ class PackageController extends Controller
                 'image' => $imageName
             ]);
         } catch (\Exception $e) {
-            return response()->json($e->getMessage());
+            // return response()->json($e->getMessage());
+            return $this->createResponse(500, [], false, $e);
         }
         $success_message = "Package was created successfully";
-        return response()->json(["result" => $success_message, "package" => $package]);
+        // return response()->json(["result" => $success_message, "package" => $package]);
+        return $this->createResponse(201, ["result" => $success_message, "package" => $package]);
     }
 
     public function destroy($id)
@@ -73,7 +78,9 @@ class PackageController extends Controller
         }
 
         try {
-            $package->delete();
+            // $package->delete();
+            $package->isDeleted = true;
+            $package->save();
             $message = "Package Deleted Successfully";
             return response()->json($message);
         } catch (\Exception $e) {
@@ -128,4 +135,23 @@ class PackageController extends Controller
         } //else condition
 
     } //end of update request
+
+    public function buyToUser(Request $request)
+    {
+        try {
+            $transaction = UserPackage::create([
+                'package_id' => $request->package_id,
+                'user_id' => $request->user_id,
+                'branch_id' => $request->branch_id,
+                'enrollement_price' => $request->enrollement_price,
+            ]);
+        } catch (\Exception $e) {
+            // return response()->json($e->getMessage());
+            return $this->createResponse(500, [], false, $e);
+            // return $this->createResponse(500, [], false, "server error");
+        }
+        $success_message = "transaction completed successfully";
+
+        return $this->createResponse(201, ["result" => $success_message, "transaction" => $transaction]);
+    } //end of buy to user
 }

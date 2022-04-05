@@ -63,6 +63,7 @@ Route::get('/users/{user}', [UserController::class, "show"]);
 Route::post('/users', [UserController::class, "store"]);
 Route::post('/users/{user}', [UserController::class, "update"]);
 Route::delete('/users/{user}', [UserController::class, "destroy"]);
+Route::get('/users/branch/{branch}', [UserController::class, "getBranchUsers"]);
 ###############################
 
 
@@ -100,8 +101,11 @@ Route::delete('/sessions/{session}', [SessionController::class, 'destroy']);
 Route::get('/packages', [PackageController::class, 'index']);
 Route::post('/packages', [PackageController::class, 'store']);
 Route::get('/packages/{package}', [PackageController::class, 'show']);
+Route::post('/packages/buyToUser', [PackageController::class, 'buyToUser']);
+// Route::post('/packages/subscribe', [PackageController::class, 'subscribe']);
 Route::post('/packages/{package}', [PackageController::class, 'update']);
 Route::delete('/packages/{package}', [PackageController::class, 'destroy']);
+
 ###########################
 
 
