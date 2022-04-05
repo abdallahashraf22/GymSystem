@@ -12,7 +12,7 @@ use Illuminate\Http\Request;
 class SessionController extends Controller
 {
     public function index(){
-        $session = Session::get();
+        $session = Session::get()->where("end_time", ">=", now());
         return SessionResource::collection($session);
     }
 
@@ -60,7 +60,8 @@ class SessionController extends Controller
     public function update(Request $request, $session_id){
         $session = Session::findOrFail($session_id);
         $request->validate(
-            ['start_time'=>new SessionOverlap(),
+            [
+                'start_time'=>new SessionOverlap(),
             ]
         );
 
@@ -73,6 +74,12 @@ class SessionController extends Controller
         $session->coaches()->sync($request->coaches);
         $success_message = "Session was updated successfully";
         return response()->json($success_message);
+    }
+
+    public function get_all_sessions()
+    {
+        $session = Session::get();
+        return SessionResource::collection($session);
     }
 
 }
