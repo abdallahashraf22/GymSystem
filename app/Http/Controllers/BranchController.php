@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Branch\CreateBranchRequest;
 use App\Http\Resources\BranchResource;
 use App\Http\Traits\PaginatorTrait;
 use App\Http\Traits\ResponseTrait;
@@ -77,5 +78,53 @@ class BranchController extends Controller
             "links" => $this->createPaginationLinks($branches->total(), 5)
         ];
         return $this->createResponse(200, $response);
+    }
+
+    public function store(CreateBranchRequest $request)
+    {
+        $imageName = "assets/images/noImageYet.jpg";
+        try {
+            $branch = Branch::create([
+                'name' => $request->name,
+                'city_id' => $request->city_id,
+                'img' => $imageName,
+            ]);
+        } catch (\Exception $e) {
+            return $this->createResponse(500, [], false, "server error");
+        }
+
+        return $this->createResponse(200, $branch);
+    }
+
+    public function update(CreateBranchRequest $request, Branch $branch)
+    {
+        $imageName = "assets/images/noImageYet.jpg";
+
+        $branch->name = $request->name;
+        $branch->city_id = $request->city_id;
+
+        $branch->img = $imageName;
+
+        try {
+            $branch->save();
+        } catch (\Exception $e) {
+            return $this->createResponse(500, [], false, "server error");
+        }
+
+        return $this->createResponse(200, $branch);
+    }
+
+    public function destroy(int $id)
+    {
+
+        if (!$branch = Branch::find($id))
+            return "not found";
+        try {
+            $branch->isDeleted = true;
+            $branch->save();
+        } catch (\Exception $e) {
+            return $this->createResponse(500, [], false, "server error");
+        }
+        return $this->createResponse(200, "deleted successfully");
     }
 }
