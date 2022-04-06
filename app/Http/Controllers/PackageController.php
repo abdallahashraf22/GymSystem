@@ -144,6 +144,7 @@ class PackageController extends Controller
                 'user_id' => $request->user_id,
                 'branch_id' => $request->branch_id,
                 'enrollement_price' => $request->enrollement_price,
+                'remianing_sessions' => $request->remianing_sessions
             ]);
         } catch (\Exception $e) {
             // return response()->json($e->getMessage());
