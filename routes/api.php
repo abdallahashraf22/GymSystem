@@ -88,7 +88,7 @@ Route::delete('/gymmanagers/{gymmanager}', [GymMangerController::class, "destroy
 
 #### Sessions routes #####
 Route::get('/sessions', [SessionController::class, 'index']);
-Route::get('/allsessions', [SessionController::class, 'get_all_sessions']);
+Route::get('/oldsessions', [SessionController::class, 'get_old_sessions']);
 Route::post('/sessions', [SessionController::class, 'store']);
 Route::get('/sessions/{session}', [SessionController::class, 'show']);
 Route::put('/sessions/{session}', [SessionController::class, 'update']);
@@ -140,5 +140,8 @@ Route::group([
 ], function ($router) {
     Route::get('/branches', [BranchController::class, 'index']);
     Route::get('/branches/paginate', [BranchController::class, "paginate"]);
+    Route::post('/branches', [BranchController::class, "store"]);
+    Route::post('/branches/{branch}', [BranchController::class, "update"]);
+    Route::delete('/branches/{branch}', [BranchController::class, "destroy"]);
 });
 #######################################

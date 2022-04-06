@@ -115,13 +115,8 @@ class UserController extends Controller
             $user->isDeleted = true;
             $user->save();
         } catch (\Exception $e) {
-            return response()->json($e);
+            return $this->createResponse(500, [], false, "server error");
         }
-        // try {
-        //     $user->delete();
-        // } catch (\Exception $e) {
-        //     return response()->json($e);
-        // }
         return $this->createResponse(200, "deleted successfully");
     }
 
