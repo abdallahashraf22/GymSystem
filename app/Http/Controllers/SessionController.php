@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Middleware\CheckBranchId;
 use App\Http\Requests\Session\StoreSessionRequest;
 use App\Http\Resources\SessionResource;
 use App\Http\Resources\CoachResource;
@@ -11,8 +12,14 @@ use Illuminate\Http\Request;
 
 class SessionController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware(CheckBranchId::class);
+    }
+
     public function index(){
-        $session = Session::get()->where("end_time", ">=", now());
+        $branch_id = request('branch_id');
+        $session = Session::where("end_time", ">=", now())->where('branch_id', $branch_id)->get();
         return SessionResource::collection($session);
     }
 
@@ -78,7 +85,8 @@ class SessionController extends Controller
 
     public function get_old_sessions()
     {
-        $session = Session::get()->where("end_time", "<=", now());
+        $branch_id = request('branch_id');
+        $session = Session::where("end_time", "<=", now())->where('branch_id', $branch_id)->get();
         return SessionResource::collection($session);
     }
 
