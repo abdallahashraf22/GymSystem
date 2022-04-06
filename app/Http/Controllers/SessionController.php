@@ -4,17 +4,22 @@ namespace App\Http\Controllers;
 
 use App\Http\Middleware\CheckBranchId;
 use App\Http\Requests\Session\StoreSessionRequest;
+use App\Http\Requests\Sessions\CreateSessionRequest;
 use App\Http\Resources\SessionResource;
 use App\Http\Resources\CoachResource;
+use App\Http\Traits\ResponseTrait;
 use App\Models\Session;
 use App\Rules\SessionOverlap;
 use Illuminate\Http\Request;
 
 class SessionController extends Controller
 {
+
+    use ResponseTrait;
+
     public function __construct()
     {
-        $this->middleware(CheckBranchId::class);
+//        $this->middleware(CheckBranchId::class);
     }
 
     public function index(){
@@ -28,25 +33,19 @@ class SessionController extends Controller
         return new SessionResource($session);
     }
 
-    public function store(Request $request){
+    public function store(CreateSessionRequest $request){
         try{
-            $request->validate(
-                ['start_time'=>new SessionOverlap(),
-                ]
-            );
-
             $session = Session::create([
                 'name' => $request->name,
-                'branch_id'=> $request->branch_id,
+                'branch_id' => $request->branch_id,
                 'start_time' => $request->start_time,
-                'end_time' =>$request ->end_time,
+                'end_time' => $request ->end_time,
             ]);
-            $session->coaches()->sync($request->coaches);
+            $session->coaches()->syncWithoutDetaching($request->coaches);
         }catch(\Exception $e){
-            return response()->json($e->getMessage());
+            return $this->createResponse(200, [], false, $e->getMessage());
         }
-        $success_message = "Session was created successfully";
-        return response()->json($success_message);
+        return $this->createResponse(200, $session);
     }
 
     public function destroy($id){
@@ -78,7 +77,7 @@ class SessionController extends Controller
             'start_time' => $request->start_time,
             'end_time' =>$request ->end_time,
         ]);
-        $session->coaches()->sync($request->coaches);
+        $session->coaches()->syncWithoutDetaching($request->coaches);
         $success_message = "Session was updated successfully";
         return response()->json($success_message);
     }
