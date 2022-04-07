@@ -1,16 +1,16 @@
 <?php
 
-namespace App\Http\Requests\User;
+namespace App\Http\Requests\CityManager;
 
 use App\Http\Traits\ResponseTrait;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Validation\ValidationException;
 
-class CreateUserRequest extends FormRequest
+
+class CreateRequest extends FormRequest
 {
     use ResponseTrait;
-
 
     public function authorize()
     {
@@ -25,9 +25,9 @@ class CreateUserRequest extends FormRequest
             "email" => ["required", "unique:users,email"],
             "password" => ["required"],
             "national_id" => ["required", "unique:users,national_id"],
-            "image_url" => ["required"]
         ];
     }
+
 
     protected function failedValidation(Validator $validator)
     {

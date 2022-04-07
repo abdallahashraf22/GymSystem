@@ -11,15 +11,12 @@ use Laravel\Sanctum\HasApiTokens;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
 
-class User extends Authenticatable implements JWTSubject
+
+class User extends Authenticatable implements JWTSubject, MustVerifyEmail
 {
     use HasApiTokens, HasFactory, Notifiable;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
+
     protected $fillable = [
         'name',
         'email',
@@ -27,35 +24,24 @@ class User extends Authenticatable implements JWTSubject
         "role",
         "national_id",
         "image_url",
-        "isDeleted"
+        "isDeleted",
+        "remember_token"
     ];
 
-    /**
-     * The "booted" method of the model.
-     *
-     * @return void
-     */
+
     protected static function booted()
     {
         static::addGlobalScope(new IsDeletedScope);
     }
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
-     */
+
     protected $hidden = [
         'password',
         'remember_token',
         "isDeleted"
     ];
 
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array<string, string>
-     */
+
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
@@ -77,21 +63,13 @@ class User extends Authenticatable implements JWTSubject
 
 
 
-    /**
-     * Get the identifier that will be stored in the subject claim of the JWT.
-     *
-     * @return mixed
-     */
+
     public function getJWTIdentifier()
     {
         return $this->getKey();
     }
 
-    /**
-     * Return a key value array, containing any custom claims to be added to the JWT.
-     *
-     * @return array
-     */
+
     public function getJWTCustomClaims()
     {
         return [

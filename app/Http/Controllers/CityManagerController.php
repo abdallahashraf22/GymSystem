@@ -2,16 +2,114 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CityManager\CreateRequest;
+use App\Http\Requests\CityManager\UpdateRequest;
+use App\Http\Traits\ResponseTrait;
 use App\Models\Branch;
 use App\Models\City;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class CityManagerController extends Controller
 {
-    // City Branches
-    public function getAllBranches()
+    use ResponseTrait;
+
+    # City Managers
+    public function index()
+    {
+        try {
+            $cityManagers = User::where("role", "city manager")->get();
+        } catch (\Exception $e) {
+
+            return $this->createResponse(500, [], false, "Server error");
+        }
+        return $this->createResponse(200, $cityManagers);
+    }
+
+    public function show(int $id)
+    {
+
+        try {
+            $cityManager = User::find($id);
+        } catch (\Exception $e) {
+            return $this->createResponse(500, [], false, "server error");
+        }
+        return $this->createResponse(200, $cityManager);
+
+    }
+
+    public function store(CreateRequest $request)
+    {
+        try {
+            $cityManager = User::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'isbanned' => false,
+                'password' => bcrypt($request->password),
+                'national_id' => $request->national_id,
+                'role' => "city manager",
+                'image_url' => $request->image_url,
+            ]);
+        } catch (\Exception $e) {
+            return $this->createResponse(500, [], false, "Server Error");
+        }
+
+        return $this->createResponse(200, $cityManager);
+    }
+
+
+    public function update(Request $request, int $cityManagerId)
+    {
+        Validator::make($request->all(), [
+            'name' => 'required',
+            'email' => [
+                'required',
+                Rule::unique('users')->ignore($cityManagerId),
+            ],
+            'nationalid' => [
+                'required',
+                Rule::unique('users')->ignore($cityManagerId),
+            ],
+        ]);
+
+
+        // Make it Number here
+        $cityManager = User::find($cityManagerId);
+        try {
+            $cityManager->update([
+                "name" => $request->header('name'),
+                "email" => $request->header('email'),
+                // "isbanned" => $request->header("isbanned"),
+                "national_id" => $request->header('nationalid'),
+                "image_url" => $request->header('imageurl'),
+            ]);
+        } catch (\Exception $e) {
+            return $this->createResponse(500, [], false, $e->getMessage());
+        }
+        return $this->createResponse(200, $cityManager);
+
+
+    }
+
+    public function destroy(int $id)
+    {
+        if (!$user = User::find($id))
+            return "not found";
+        try {
+            $user->delete();
+        } catch (\Exception $e) {
+            return response()->json($e);
+        }
+        return $this->createResponse(200, "Deleted Successfully");
+    }
+
+
+// City Branches
+    public
+    function getAllBranches()
     {
         // Here we will get Loggedin Manager ID
 
@@ -21,7 +119,8 @@ class CityManagerController extends Controller
         return response()->json($managed_city->branches);
     }
 
-    public function createBranch(Request $request)
+    public
+    function createBranch(Request $request)
     {
         Branch::create([
             "id" => $request->id,
@@ -32,7 +131,8 @@ class CityManagerController extends Controller
         return response()->json($SuccessBranchCreation);
     }
 
-    public function editBranch(Request $request, $id)
+    public
+    function editBranch(Request $request, $id)
     {
         $branch = Branch::findOrFail($id);
         $branch->update([
@@ -40,21 +140,24 @@ class CityManagerController extends Controller
             "name" => $request->name,
             "city_id" => $request->city_id
             // There is a Problem here in key city_id
-            // "city_id"=>$request->header('city_id')
+            // "city_id"=>$request->header("city_id')
         ]);
         $SuccessBranchUpdate = "Branch Updated Successfully";
         return response()->json($SuccessBranchUpdate);
     }
 
-    public function deleteBranch(Request $request, $id)
+    public
+    function deleteBranch(Request $request, $id)
     {
         $branch = Branch::findOrFail($id);
         $branch->delete();
         $SuccessBranchDelete = "Branch Deleted Successfully";
         return response()->json($SuccessBranchDelete);
     }
-    // Branches Mangers
-    public function indexManagers()
+
+// Branches Mangers
+    public
+    function indexManagers()
     {
         // Here 1 is the City_Id as Static Value
         $branches = Branch::where("city_id", 1)->get("id");
@@ -66,7 +169,8 @@ class CityManagerController extends Controller
         return response()->json($managers);
     }
 
-    public function storeManager(Request $request)
+    public
+    function storeManager(Request $request)
     {
         try {
             $manager = User::create([
@@ -87,7 +191,8 @@ class CityManagerController extends Controller
         return response()->json($manager);
     }
 
-    public function updateManager(Request $request, $managerId)
+    public
+    function updateManager(Request $request, $managerId)
     {
         $manager = User::findOrFail($managerId);
         $manager->update([
@@ -103,7 +208,8 @@ class CityManagerController extends Controller
         return response()->json($SuccessManagerUpdate);
     }
 
-    public function destroyManager(int $managerId)
+    public
+    function destroyManager(int $managerId)
     {
         if (!$manager = User::findOrFail($managerId))
             return "not found";

@@ -6,20 +6,18 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
+
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 
 class AuthController extends Controller
 {
-    /**
-     * Create a new AuthController instance.
-     * func
-     * @return void
-     */
+
     public function __construct()
     {
         $this->middleware('auth:api')->except(["login"]);
     }
+
 
     public function login()
     {
@@ -34,14 +32,6 @@ class AuthController extends Controller
     }
 
 
-
-    /**
-     * Get the token array structure.
-     *
-     * @param  string $token
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
     protected function respondWithToken($token)
     {
         return response()->json([

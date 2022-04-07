@@ -8,8 +8,11 @@ use App\Http\Traits\ResponseTrait;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Auth\Events\Registered;
 
-class UserController extends Controller
+
+class UserController extends Controller implements MustVerifyEmail
 {
     use ResponseTrait;
 
@@ -81,8 +84,9 @@ class UserController extends Controller
                 'role' => "user",
                 'image_url' => $request->image_url,
             ]);
-        } catch (\Exception $e) {
 
+        } catch (\Exception $e) {
+            // Email
             return $this->createResponse(500, [], false, "server error");
         }
 
@@ -126,64 +130,25 @@ class UserController extends Controller
     }
 
 
-    # City Managers
-    public function indexCityManagers()
+
+
+    public function hasVerifiedEmail()
     {
-        $cityManagers = User::where("role", "city manager")->get();
-        return response()->json($cityManagers);
+        // TODO: Implement hasVerifiedEmail() method.
     }
 
-    public function showCityManager(int $id)
+    public function markEmailAsVerified()
     {
-        $cityManager = User::find($id);
-        return response()->json($cityManager);
+        // TODO: Implement markEmailAsVerified() method.
     }
 
-    public function storeCityManager(Request $request)
+    public function sendEmailVerificationNotification()
     {
-        try {
-            $cityManager = User::create([
-                'name' => $request->name,
-                'email' => $request->email,
-                'isbanned' => false,
-                'password' => bcrypt($request->password),
-                'national_id' => $request->national_id,
-                'role' => "city manager",
-                'image_url' => $request->image_url,
-            ]);
-        } catch (\Exception $e) {
-
-            return response()->json($e->getMessage());
-        }
-
-        return response()->json($cityManager);
+        // TODO: Implement sendEmailVerificationNotification() method.
     }
 
-    public function updateCityManager(Request $request, int $cityManagerId)
+    public function getEmailForVerification()
     {
-        // Make it Number here
-        $cityManager = User::findOrFail($cityManagerId);
-        $cityManager->update([
-            "name" => $request->header("name"),
-            "email" => $request->header("email"),
-            // "isbanned" => $request->header("isbanned"),
-            // "password" => $request->header("password"),
-            "national_id" => $request->header("nationalid"),
-            "image_url" => $request->header("imageurl"),
-        ]);
-        $SuccessCityManagerUpdate = "City Manager Updated Successfully";
-        return response()->json($SuccessCityManagerUpdate);
-    }
-
-    public function destroyCityManager(int $id)
-    {
-        if (!$user = User::find($id))
-            return "not found";
-        try {
-            $user->delete();
-        } catch (\Exception $e) {
-            return response()->json($e);
-        }
-        return response()->json(["isSuccess" => true]);
+        // TODO: Implement getEmailForVerification() method.
     }
 }

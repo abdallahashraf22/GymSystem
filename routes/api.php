@@ -2,14 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\AuthController;
-use App\Http\Controllers\BranchController;
-use App\Http\Controllers\CityController;
+use App\Http\Controllers\Api\apiAuthController;
+use App\Http\Controllers\Api\EmailVerificationController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\GymMangerController;
-use App\Http\Controllers\PackageController;
-use App\Http\Controllers\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,7 +17,6 @@ use App\Http\Controllers\UserController;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-
 
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
@@ -42,19 +37,14 @@ Route::post('/managers/{managerId}', [CityManagerController::class, "updateManag
 Route::delete('/managers/{managerId}', [CityManagerController::class, "destroyManager"]);
 ###########################
 
-
-
-
 ##### for JWT Auth ######
-Route::group([
-    'middleware' => 'api',
-    'prefix' => 'auth'
-], function ($router) {
-    Route::post('login', [AuthController::class, "login"]);
-});
+//Route::group([
+//    'middleware' => 'api',
+//    'prefix' => 'auth'
+//], function ($router) {
+//    Route::post('login', [AuthController::class, "login"]);
+//});
 ###########################
-
-
 
 ##### users from UserController ######
 Route::get('/users', [UserController::class, "index"]);
@@ -65,15 +55,9 @@ Route::post('/users/{user}', [UserController::class, "update"]);
 Route::delete('/users/{user}', [UserController::class, "destroy"]);
 ###############################
 
-
 ###### CityManagers from UserController ######
-Route::get('/citymanagers', [UserController::class, "indexCityManagers"]);
-Route::get('/citymanagers/{citymanager}', [UserController::class, "showCityManager"]);
-Route::post('/citymanagers', [UserController::class, "storeCityManager"]);
-Route::put('/citymanagers/{citymanager}', [UserController::class, "updateCityManager"]);
-Route::delete('/citymanagers/{citymanager}', [UserController::class, "destroyCityManager"]);
+Route::apiResource('citymanagers', CityManagerController::class);
 ###############################
-
 
 
 #### gym managers routs #####
@@ -92,7 +76,6 @@ Route::get('/sessions/{session}', [SessionController::class, 'show']);
 Route::put('/sessions/{session}', [SessionController::class, 'update']);
 Route::delete('/sessions/{session}', [SessionController::class, 'destroy']);
 ###########################
-
 
 
 #### packages routes #####
@@ -123,12 +106,27 @@ Route::apiResource("cities", CityController::class);
 Route::apiResource('sheets', AttendanceController::class);
 ################################################
 
-######### Cities Routes  ###############
-Route::apiResource("cities", CityController::class);
-//Route::get('/citymanagersids', [UserController::class, "indexCityManagers"]);
-#######################################
-
 
 #### Branches routes ####
 Route::get('/branches', [BranchController::class, 'index']);
 #######################################
+
+
+####### Authentication ####################
+// Register
+Route::post('/register', [ApiAuthController::class, 'register'])->name('auth.handleRegister');
+// Login
+//Route::get('/login', [ApiAuthController::class, 'test'])->name('login');
+// Logout
+Route::post('/logout', [ApiAuthController::class, 'logout'])->name('auth.logout');
+
+Route::post('email/verification-notification', [EmailVerificationController::class, 'sendVerificationEmail'])
+    ->middleware(['auth']);
+Route::get('verify-email/{id}/{hash}', [EmailVerificationController::class, 'verify'])
+    ->name('verification.verify')
+    ->middleware(['auth', 'signed']);
+
+//Route::get('/login/{id}', [ApiAuthController::class, 'test'])->name('login');
+
+
+
