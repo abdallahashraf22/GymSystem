@@ -140,6 +140,7 @@ Route::group([
 ], function ($router) {
     Route::get('/branches', [BranchController::class, 'index']);
     Route::get('/branches/paginate', [BranchController::class, "paginate"]);
+    Route::get('/branches/{branch}', [BranchController::class, 'show']);
     Route::post('/branches', [BranchController::class, "store"]);
     Route::post('/branches/{branch}', [BranchController::class, "update"]);
     Route::delete('/branches/{branch}', [BranchController::class, "destroy"]);

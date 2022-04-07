@@ -61,12 +61,15 @@ class BranchController extends Controller
             $sortDirection = "desc";
 
         try {
-            $branches = Branch::where('city_id', $city_id)
-                ->when(request("search"), function ($q) {
-                    $q->where(function ($query) {
-                        $query->where("name", "like", "%" . request("search") . "%");
-                    });
-                })->with('city.manager')->orderBy($sortField, $sortDirection)->paginate(5);
+            $branches = Branch::when(request("city_id") != "all", function ($q) {
+                $q->where(function ($query) {
+                    $query->where('city_id', request("city_id"));
+                });
+            })->when(request("search"), function ($q) {
+                $q->where(function ($query) {
+                    $query->where("name", "like", "%" . request("search") . "%");
+                });
+            })->with('city.manager')->orderBy($sortField, $sortDirection)->paginate(5);
         } catch (\Exception $e) {
             return $this->createResponse(500, [], false, "server error");
         }
@@ -111,6 +114,16 @@ class BranchController extends Controller
             return $this->createResponse(500, [], false, "server error");
         }
 
+        return $this->createResponse(200, $branch);
+    }
+
+    public function show(int $id)
+    {
+        try {
+            $branch = Branch::find($id);
+        } catch (\Exception $e) {
+            return $this->createResponse(500, [], false, "server error");
+        }
         return $this->createResponse(200, $branch);
     }
 
