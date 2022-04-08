@@ -37,16 +37,21 @@ class GymMangerController extends Controller
     public function update(Request $request, $managerId)
     {
         $manager = User::findOrFail($managerId);
-        $manager->update([
-            "name" => $request->name,
-            "email" => $request->email,
-            "isbanned" => $request->isbanned,
-            "password" => $request->password,
-            "national_id" => $request->national_id,
-            "image_url" => $request->image_url,
-            "branch_id" => $request->branch_id
-        ]);
-        return response()->json($manager);
+        try {
+            $manager->update([
+                "name" => $request->name,
+                "email" => $request->email,
+                "isbanned" => $request->isbanned,
+                "national_id" => $request->national_id,
+                "image_url" => $request->image_url,
+                "branch_id" => $request->branch_id
+            ]);
+            $result = "branch manager updated";
+            return response()->json($result);
+        } catch (\Exception $e) {
+
+            return response()->json($e);
+        }
     }
 
     public function show($id)
