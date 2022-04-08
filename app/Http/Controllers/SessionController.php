@@ -43,34 +43,29 @@ class SessionController extends Controller
             ]);
             $session->coaches()->syncWithoutDetaching($request->coaches);
         }catch(\Exception $e){
-            return $this->createResponse(200, [], false, $e->getMessage());
+            return $this->createResponse(500, [], false, $e->getMessage());
         }
         return $this->createResponse(200, $session);
     }
 
     public function destroy($id){
-        $message = "Session was not found";
         if(!Session::find($id)){
-            return response()->json($message);
+            return $this->createResponse(404, [], false, "Session not found");
         }
         try{
             $session = Session::findOrFail($id);
-            $session->delete($id);
-            $message = "Deleted Successfully";
-            return response()->json($message);
+            $session->update([
+              'isDeleted'=>true
+            ]);
+            return $this->createResponse(200, [], true, "Session deleted successfully");
         }catch (\Exception $e){
-            return response()->json($e);
+            return $this->createResponse(500, [], false, "Server error");
         }
     }
 
-    public function update(Request $request, $session_id){
+    public function update(CreateSessionRequest $request, $session_id){
+        try{
         $session = Session::findOrFail($session_id);
-        $request->validate(
-            [
-                'start_time'=>new SessionOverlap(),
-            ]
-        );
-
         $session ->update([
             'name'=> $request->name,
             'branch_id'=> $request->branch_id,
@@ -78,8 +73,10 @@ class SessionController extends Controller
             'end_time' =>$request ->end_time,
         ]);
         $session->coaches()->syncWithoutDetaching($request->coaches);
-        $success_message = "Session was updated successfully";
-        return response()->json($success_message);
+        }catch(\Exception $e){
+            return $this->createResponse(500, [], false, $e->getMessage());
+        }
+        return $this->createResponse(200, $session);
     }
 
     public function get_old_sessions()
