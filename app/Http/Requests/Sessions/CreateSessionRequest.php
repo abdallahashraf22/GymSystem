@@ -30,8 +30,8 @@ class CreateSessionRequest extends FormRequest
         return [
             'name' => "required",
             'branch_id' => "required",
-            'start_time'=> [new SessionOverlap(), "required"],
-            'end_time' => [new SessionOverlap(), "required"],
+            'start_time'=> [new SessionOverlap(), "required", 'date_format:Y-m-d H:i'],
+            'end_time' => [new SessionOverlap(), "required", 'date_format:Y-m-d H:i', 'after:start_time'],
             'coaches' => "required"
         ];
     }
