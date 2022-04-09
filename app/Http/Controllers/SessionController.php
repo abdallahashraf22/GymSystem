@@ -41,7 +41,7 @@ class SessionController extends Controller
                 'start_time' => $request->start_time,
                 'end_time' => $request ->end_time,
             ]);
-            $session->coaches()->syncWithoutDetaching($request->coaches);
+            $session->coaches()->sync($request->coaches);
         }catch(\Exception $e){
             return $this->createResponse(500, [], false, $e->getMessage());
         }
@@ -65,14 +65,14 @@ class SessionController extends Controller
 
     public function update(CreateSessionRequest $request, $session_id){
         try{
-        $session = Session::findOrFail($session_id);
-        $session ->update([
-            'name'=> $request->name,
-            'branch_id'=> $request->branch_id,
-            'start_time' => $request->start_time,
-            'end_time' =>$request ->end_time,
-        ]);
-        $session->coaches()->syncWithoutDetaching($request->coaches);
+            $session = Session::findOrFail($session_id);
+            $session ->update([
+                'name'=> $request->name,
+                'branch_id'=> $request->branch_id,
+                'start_time' => $request->start_time,
+                'end_time' =>$request ->end_time,
+            ]);
+            $session->coaches()->sync($request->coaches);
         }catch(\Exception $e){
             return $this->createResponse(500, [], false, $e->getMessage());
         }
