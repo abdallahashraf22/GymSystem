@@ -8,6 +8,7 @@ use App\Models\UserPackage;
 use App\Http\Resources\SessionResource;
 use App\Http\Traits\ResponseTrait;
 use App\Http\Traits\UploadImageTrait;
+use App\Models\User;
 use Illuminate\Support\Facades\Log;
 
 class PackageController extends Controller
@@ -139,13 +140,31 @@ class PackageController extends Controller
     public function buyToUser(Request $request)
     {
         try {
-            $transaction = UserPackage::create([
-                'package_id' => $request->package_id,
-                'user_id' => $request->user_id,
-                'branch_id' => $request->branch_id,
-                'enrollement_price' => $request->enrollement_price,
-                'remianing_sessions' => $request->remianing_sessions
-            ]);
+            $package = Package::find(request('package_id'));
+            $price = 200000;
+            $user = User::find(request('user_id'));
+        } catch (\Exception $e) {
+            return $this->createResponse(500, [], false, $e->getMessage());
+        }
+
+        try {
+            $payment = $user->charge(
+                $price,
+                request('paymentMethodId')
+            );
+            // $payment = $payment->asStripePaymentIntent();
+        } catch (\Exception $e) {
+            return $this->createResponse(500, [], false, $e->getMessage());
+        }
+
+        try {
+            // $transaction = UserPackage::create([
+            //     'package_id' => $request->package_id,
+            //     'user_id' => $request->user_id,
+            //     'branch_id' => $request->branch_id,
+            //     'enrollement_price' => $request->enrollement_price,
+            //     'remianing_sessions' => $request->remianing_sessions
+            // ]);
         } catch (\Exception $e) {
             // return response()->json($e->getMessage());
             return $this->createResponse(500, [], false, $e);
@@ -153,6 +172,6 @@ class PackageController extends Controller
         }
         $success_message = "transaction completed successfully";
 
-        return $this->createResponse(201, ["result" => $success_message, "transaction" => $transaction]);
+        return $this->createResponse(201, ["result" => $success_message, "transaction" => "done"]);
     } //end of buy to user
 }
