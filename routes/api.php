@@ -100,8 +100,8 @@ Route::delete('/sessions/{session}', [SessionController::class, 'destroy']);
 #### packages routes #####
 Route::get('/packages', [PackageController::class, 'index']);
 Route::post('/packages', [PackageController::class, 'store']);
-Route::get('/packages/{package}', [PackageController::class, 'show']);
 Route::post('/packages/buyToUser', [PackageController::class, 'buyToUser']);
+Route::get('/packages/{package}', [PackageController::class, 'show']);
 // Route::post('/packages/subscribe', [PackageController::class, 'subscribe']);
 Route::post('/packages/{package}', [PackageController::class, 'update']);
 Route::delete('/packages/{package}', [PackageController::class, 'destroy']);
