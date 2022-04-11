@@ -65,5 +65,6 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'isAdmin' =>  \App\Http\Middleware\ChcekAdmin::class,
         'isCityManager' =>  \App\Http\Middleware\ChcekCityManager::class,
+        'isBranchManager' =>  \App\Http\Middleware\ChcekCityManager::class,
     ];
 }
