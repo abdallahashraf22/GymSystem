@@ -27,7 +27,8 @@ class User extends Authenticatable implements JWTSubject
         "role",
         "national_id",
         "image_url",
-        "isDeleted"
+        "isDeleted",
+        "branch_id"
     ];
 
     /**

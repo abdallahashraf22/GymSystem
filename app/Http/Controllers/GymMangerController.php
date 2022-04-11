@@ -31,12 +31,18 @@ class GymMangerController extends Controller
 
             return response()->json($e->getMessage());
         }
-        return response()->json($manager);
+        $result = "branch manager added";
+        return response()->json($result);
     }
 
     public function update(Request $request, $managerId)
     {
         $manager = User::findOrFail($managerId);
+        if ($request->has('branch_id')) {
+            $branchId = $request->branch_id;
+        } else {
+            $branchId = $manager->branch_id;
+        }
         try {
             $manager->update([
                 "name" => $request->name,
@@ -44,7 +50,7 @@ class GymMangerController extends Controller
                 "isbanned" => $request->isbanned,
                 "national_id" => $request->national_id,
                 "image_url" => $request->image_url,
-                "branch_id" => $request->branch_id
+                "branch_id" => $branchId
             ]);
             $result = "branch manager updated";
             return response()->json($result);
