@@ -31,3 +31,4 @@ Homestead.json
 /.vagrant
 .phpunit.result.cache
 public\assets\images\packages
+public\assets\images\branches
