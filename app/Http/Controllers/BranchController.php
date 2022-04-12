@@ -6,16 +6,17 @@ use App\Http\Requests\Branch\CreateBranchRequest;
 use App\Http\Resources\BranchResource;
 use App\Http\Traits\PaginatorTrait;
 use App\Http\Traits\ResponseTrait;
+use App\Http\Traits\UploadImageTrait;
 use App\Models\Branch;
 use Illuminate\Http\Request;
 
 class BranchController extends Controller
 {
-    use ResponseTrait, PaginatorTrait;
+    use ResponseTrait, PaginatorTrait, UploadImageTrait;
 
     public function __construct()
     {
-        $this->middleware('isCityManager')->only(['paginate', 'index']);
+        $this->middleware('isCityManager');
     }
 
     public function index()
@@ -50,7 +51,6 @@ class BranchController extends Controller
 
     public function paginate()
     {
-        $city_id = request('city_id', 1);
 
         $sortField = request('sortField', "created_at");
         if (!in_array($sortField, ['name', 'created_at']))
@@ -59,12 +59,10 @@ class BranchController extends Controller
         $sortDirection = request('sortDirection', "desc");
         if (!in_array($sortDirection, ['asc', 'desc']))
             $sortDirection = "desc";
-
+        // select * from branches where city_id=1;
         try {
-            $branches = Branch::when(request("city_id") != "all", function ($q) {
-                $q->where(function ($query) {
-                    $query->where('city_id', request("city_id"));
-                });
+            $branches = Branch::when(request("city_id") != "all", function ($query) {
+                $query->where('city_id', request("city_id"));
             })->when(request("search"), function ($q) {
                 $q->where(function ($query) {
                     $query->where("name", "like", "%" . request("search") . "%");
@@ -85,7 +83,7 @@ class BranchController extends Controller
 
     public function store(CreateBranchRequest $request)
     {
-        $imageName = "assets/images/noImageYet.jpg";
+        $imageName = $this->uploadImage("branches", $request->file('image'));
         try {
             $branch = Branch::create([
                 'name' => $request->name,

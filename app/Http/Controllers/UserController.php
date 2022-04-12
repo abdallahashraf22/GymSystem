@@ -36,7 +36,7 @@ class UserController extends Controller
                 $q->where(function ($query) {
                     $query->where("email", "like", "%" . request("search") . "%");
                 });
-            })->paginate(5);
+            })->limit(5)->get(['id', 'email']);
         } catch (\Exception $e) {
 
             return $this->createResponse(500, [], false, "server error");
