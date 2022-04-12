@@ -99,11 +99,10 @@ class BranchController extends Controller
 
     public function update(CreateBranchRequest $request, Branch $branch)
     {
-        $imageName = "assets/images/noImageYet.jpg";
+        $imageName = $this->uploadImage("branches", $request->file('image'));
 
         $branch->name = $request->name;
         $branch->city_id = $request->city_id;
-
         $branch->img = $imageName;
 
         try {
