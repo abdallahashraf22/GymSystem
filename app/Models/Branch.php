@@ -13,7 +13,8 @@ class Branch extends Model
         "id",
         "name",
         "city_id",
-        "isDeleted"
+        "isDeleted",
+        "img"
     ];
 
     /**

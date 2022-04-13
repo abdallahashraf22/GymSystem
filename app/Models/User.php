@@ -9,12 +9,12 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Tymon\JWTAuth\Contracts\JWTSubject;
-
+use Laravel\Cashier\Billable;
 
 
 class User extends Authenticatable implements JWTSubject
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable, Billable;
 
     /**
      * The attributes that are mass assignable.
@@ -101,6 +101,7 @@ class User extends Authenticatable implements JWTSubject
             "email" => $this->email,
             "role" => $this->role,
             "city_id" => $this->city ? $this->city->id : null,
+            "branch_id" => $this->branch_id
         ];
     }
 }

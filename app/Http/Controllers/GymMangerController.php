@@ -7,6 +7,12 @@ use Illuminate\Http\Request;
 
 class GymMangerController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('isCityManager');
+    }
+
     public function index()
     {
         // $managers = User::whereHas('branch')->with('branch')->get();

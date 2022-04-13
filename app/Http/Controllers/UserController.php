@@ -5,13 +5,14 @@ namespace App\Http\Controllers;
 use App\Http\Requests\User\CreateUserRequest;
 use App\Http\Requests\User\UpdateUserRequest;
 use App\Http\Traits\ResponseTrait;
+use App\Http\Traits\UploadImageTrait;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
-    use ResponseTrait;
+    use ResponseTrait, UploadImageTrait;
 
     public function __construct()
     {
@@ -22,6 +23,21 @@ class UserController extends Controller
     {
         try {
             $users = User::where("role", "user")->get();
+        } catch (\Exception $e) {
+
+            return $this->createResponse(500, [], false, "server error");
+        }
+        return $this->createResponse(200, $users);
+    }
+
+    public function getSomeByEmail()
+    {
+        try {
+            $users = User::where("role", "user")->when(request("search"), function ($q) {
+                $q->where(function ($query) {
+                    $query->where("email", "like", "%" . request("search") . "%");
+                });
+            })->limit(5)->get(['id', 'email']);
         } catch (\Exception $e) {
 
             return $this->createResponse(500, [], false, "server error");
@@ -45,18 +61,11 @@ class UserController extends Controller
                     $query->where("name", "like", "%" . request("search") . "%")
                         ->orWhere("email", "like", "%" . request("search") . "%");
                 });
-            })->orderBy($sortField, $sortDirection)->paginate(3);
+            })->orderBy($sortField, $sortDirection)->paginate(5);
         } catch (\Throwable $th) {
             return $this->createResponse(500, [], false, "server error");
         }
 
-        $users = User::where("role", "user")->when(request("search"), function ($q) {
-            $q->where(function ($query) {
-                $query->where("name", "like", "%" . request("search") . "%")->orWhere("email", "like", "%" . request("search") . "%");
-            });
-        })->orderBy($sortField, $sortDirection)->paginate(5);
-
-        //$users = User::where("role", "user")->get();
         return $this->createResponse(200, $users);
     }
 
@@ -72,6 +81,7 @@ class UserController extends Controller
 
     public function store(CreateUserRequest $request)
     {
+        $imageName = $this->uploadImage("users", $request->file('image'));
         try {
             $user = User::create([
                 'name' => $request->name,
@@ -80,10 +90,10 @@ class UserController extends Controller
                 'password' => bcrypt($request->password),
                 'national_id' => $request->national_id,
                 'role' => "user",
-                'image_url' => $request->image_url,
+                'image_url' => $imageName,
             ]);
         } catch (\Exception $e) {
-            return $this->createResponse(500, [], false, "server error");
+            return $this->createResponse(200, [], false, "server error");
         }
 
         return $this->createResponse(200, $user);
@@ -91,16 +101,16 @@ class UserController extends Controller
 
     public function update(UpdateUserRequest $request, User $user)
     {
-        $user->name = request()->name;
-        $user->email = request()->email;
-        $user->isbanned = false;
-        $user->national_id = request()->national_id;
-        $user->image_url = request()->image_url;
-
+        $imageName = $this->uploadImage("users", $request->file('image'));
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->national_id = $request->national_id;
+        $user->image_url = $imageName;
+        logger($imageName);
         try {
             $user->save();
         } catch (\Exception $e) {
-            return $this->createResponse(500, [], false, "server error");
+            return $this->createResponse(200, [], false, $e->getMessage());
         }
 
         return $this->createResponse(200, $user);
@@ -118,80 +128,5 @@ class UserController extends Controller
             return $this->createResponse(500, [], false, "server error");
         }
         return $this->createResponse(200, "deleted successfully");
-    }
-
-
-    # City Managers
-    public function indexCityManagers()
-    {
-        $cityManagers = User::where("role", "city manager")->get();
-        return response()->json($cityManagers);
-    }
-
-    public function showCityManager(int $id)
-    {
-        $cityManager = User::find($id);
-        return response()->json($cityManager);
-    }
-
-    public function storeCityManager(Request $request)
-    {
-        try {
-            $cityManager = User::create([
-                'name' => $request->name,
-                'email' => $request->email,
-                'isbanned' => false,
-                'password' => bcrypt($request->password),
-                'national_id' => $request->national_id,
-                'role' => "city manager",
-                'image_url' => $request->image_url,
-            ]);
-        } catch (\Exception $e) {
-
-            return response()->json($e->getMessage());
-        }
-
-        return response()->json($cityManager);
-    }
-
-    public function updateCityManager(Request $request, int $cityManagerId)
-    {
-        // Make it Number here
-        $cityManager = User::findOrFail($cityManagerId);
-        $cityManager->update([
-            "name" => $request->header("name"),
-            "email" => $request->header("email"),
-            // "isbanned" => $request->header("isbanned"),
-            // "password" => $request->header("password"),
-            "national_id" => $request->header("nationalid"),
-            "image_url" => $request->header("imageurl"),
-        ]);
-        $SuccessCityManagerUpdate = "City Manager Updated Successfully";
-        return response()->json($SuccessCityManagerUpdate);
-    }
-
-    public function destroyCityManager(int $id)
-    {
-        if (!$user = User::find($id))
-            return "not found";
-        try {
-            $user->delete();
-        } catch (\Exception $e) {
-            return response()->json($e);
-        }
-        return response()->json(["isSuccess" => true]);
-    }
-
-    ////////////////////// get branch users /////////////////
-
-    public function getBranchUsers(int $id)
-    {
-        try {
-            $users = User::where("role", "user")->where("branch_id", $id)->get();
-        } catch (\Exception $e) {
-
-            return $this->createResponse(500, [], false, "server error");
-        }
-        return $this->createResponse(200, $users);
     }
 }
