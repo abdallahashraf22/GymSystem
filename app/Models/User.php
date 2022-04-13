@@ -62,7 +62,7 @@ class User extends Authenticatable implements JWTSubject
 
     public function sessions()
     {
-        return $this->belongsToMany(Session::class);
+        return $this->belongsToMany(Session::class, 'user_session')->withTimestamps();
     }
 
     public function city()

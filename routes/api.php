@@ -95,6 +95,8 @@ Route::get('/sessions/{session}', [SessionController::class, 'show']);
 Route::put('/sessions/{session}', [SessionController::class, 'update']);
 Route::delete('/sessions/{session}', [SessionController::class, 'destroy']);
 ###########################
+Route::post('/attend', [AttendanceController::class, 'store']);
+###########################
 
 
 

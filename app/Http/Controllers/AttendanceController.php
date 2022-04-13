@@ -2,11 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\AttendanceRequest;
+use App\Http\Traits\ResponseTrait;
+use App\Models\Session;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class AttendanceController extends Controller
 {
+
+    use ResponseTrait;
 
     public function index()
     {
@@ -14,9 +20,15 @@ class AttendanceController extends Controller
     }
 
 
-    public function store(Request $request)
+    public function store(AttendanceRequest $request)
     {
-
+        $session = Session::find($request->session_id);
+        $user = User::find($request->user_id);
+        if($session && $user){
+            $session->users()->save($user);
+            return $this->createResponse(200, [], true, "User attended session successfully");
+        }
+        return $this->createResponse(404, [], false, "User or Session doesn't exist");
     }
 
 
