@@ -149,3 +149,10 @@ Route::group([
     Route::delete('/branches/{branch}', [BranchController::class, "destroy"]);
 });
 #######################################
+
+#### dashboard routes ####
+// Route::get('/dashboard/revenue/branch', [DashBoardController::class, 'getBranchRevenue']);
+Route::get('/dashboard/branches', [DashBoardController::class, 'getBranches']);
+Route::post('/dashboard/branches/monthly', [DashBoardController::class, 'getBranchMonthlyRevenue']);
+
+###########################

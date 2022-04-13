@@ -11,6 +11,7 @@ use Laravel\Sanctum\HasApiTokens;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Laravel\Cashier\Billable;
 
+
 class User extends Authenticatable implements JWTSubject
 {
     use HasApiTokens, HasFactory, Notifiable, Billable;
@@ -27,7 +28,8 @@ class User extends Authenticatable implements JWTSubject
         "role",
         "national_id",
         "image_url",
-        "isDeleted"
+        "isDeleted",
+        "branch_id"
     ];
 
     /**

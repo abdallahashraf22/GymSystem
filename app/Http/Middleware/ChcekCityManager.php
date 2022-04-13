@@ -16,6 +16,7 @@ class ChcekCityManager
      * @param  \Closure(\Illuminate\Http\Request): (\Illuminate\Http\Response|\Illuminate\Http\RedirectResponse)  $next
      * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
      * request --> middlewares -> action
+     * where(city_id==null)
      */
     public function handle(Request $request, Closure $next)
     {
@@ -25,6 +26,7 @@ class ChcekCityManager
 
         if ($payload['role'] == 'city manager')
             $request['city_id'] = $payload['city_id'];
+
         if(!$request['city_id'])
             $request['city_id'] = "all";
         return $next($request);

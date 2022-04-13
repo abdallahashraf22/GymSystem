@@ -141,7 +141,7 @@ class PackageController extends Controller
     {
         try {
             $package = Package::find(request('package_id'));
-            $price = 200000;
+            $price = $package->price * 100;
             $user = User::find(request('user_id'));
         } catch (\Exception $e) {
             return $this->createResponse(500, [], false, $e->getMessage());
@@ -158,17 +158,15 @@ class PackageController extends Controller
         }
 
         try {
-            // $transaction = UserPackage::create([
-            //     'package_id' => $request->package_id,
-            //     'user_id' => $request->user_id,
-            //     'branch_id' => $request->branch_id,
-            //     'enrollement_price' => $request->enrollement_price,
-            //     'remianing_sessions' => $request->remianing_sessions
-            // ]);
+            $transaction = UserPackage::create([
+                'package_id' => $request->package_id,
+                'user_id' => $request->user_id,
+                'branch_id' => $request->branch_id,
+                'enrollement_price' => $package->price,
+                'remianing_sessions' => $package->number_of_sessions
+            ]);
         } catch (\Exception $e) {
-            // return response()->json($e->getMessage());
-            return $this->createResponse(500, [], false, $e);
-            // return $this->createResponse(500, [], false, "server error");
+            return $this->createResponse(500, [], false, $e->getMessage());
         }
         $success_message = "transaction completed successfully";
 
