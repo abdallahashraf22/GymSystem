@@ -5,13 +5,14 @@ namespace App\Http\Controllers;
 use App\Http\Requests\User\CreateUserRequest;
 use App\Http\Requests\User\UpdateUserRequest;
 use App\Http\Traits\ResponseTrait;
+use App\Http\Traits\UploadImageTrait;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
-    use ResponseTrait;
+    use ResponseTrait, UploadImageTrait;
 
     public function __construct()
     {
@@ -80,6 +81,8 @@ class UserController extends Controller
 
     public function store(CreateUserRequest $request)
     {
+        logger($request->file('image'));
+        $imageName = $this->uploadImage("users", $request->file('image'));
         try {
             $user = User::create([
                 'name' => $request->name,
@@ -88,10 +91,10 @@ class UserController extends Controller
                 'password' => bcrypt($request->password),
                 'national_id' => $request->national_id,
                 'role' => "user",
-                'image_url' => $request->image_url,
+                'image_url' => $imageName,
             ]);
         } catch (\Exception $e) {
-            return $this->createResponse(500, [], false, "server error");
+            return $this->createResponse(200, [], false, "server error");
         }
 
         return $this->createResponse(200, $user);
