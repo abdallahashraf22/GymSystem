@@ -156,3 +156,10 @@ Route::get('/dashboard/branches', [DashBoardController::class, 'getBranches']);
 Route::post('/dashboard/branches/monthly', [DashBoardController::class, 'getBranchMonthlyRevenue']);
 
 ###########################
+
+
+#### statistics routes ####
+Route::get('/statistics/revenue', [StatisticsController::class, 'getRevenue']);
+
+
+###########################

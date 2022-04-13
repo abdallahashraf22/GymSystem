@@ -21,7 +21,6 @@ class BranchController extends Controller
 
     public function index()
     {
-        $city_id = request('city_id', 1);
 
         $sortField = request('sortField', "created_at");
         if (!in_array($sortField, ['name', 'created_at']))
