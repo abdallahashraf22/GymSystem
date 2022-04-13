@@ -31,7 +31,7 @@ class Package extends Model
 
     public function users()
     {
-        $this->belongsToMany(User::class);
+        $this->belongsToMany(User::class, "packages_users_branches");
     }
 
     public function branches()

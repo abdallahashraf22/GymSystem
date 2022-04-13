@@ -77,9 +77,15 @@ class User extends Authenticatable implements JWTSubject
         return $this->belongsTo(Branch::class);
     }
 
+    public function packages()
+    {
+        return $this->belongsToMany(Package::class, "packages_users_branches");
+    }
 
 
-    /**
+
+    /*
+     *
      * Get the identifier that will be stored in the subject claim of the JWT.
      *
      * @return mixed
