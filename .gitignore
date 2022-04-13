@@ -32,3 +32,4 @@ Homestead.json
 .phpunit.result.cache
 public\assets\images\packages
 public\assets\images\branches
+public\assets\images\users

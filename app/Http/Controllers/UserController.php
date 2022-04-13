@@ -81,7 +81,6 @@ class UserController extends Controller
 
     public function store(CreateUserRequest $request)
     {
-        logger($request->file('image'));
         $imageName = $this->uploadImage("users", $request->file('image'));
         try {
             $user = User::create([
@@ -102,16 +101,16 @@ class UserController extends Controller
 
     public function update(UpdateUserRequest $request, User $user)
     {
-        $user->name = request()->name;
-        $user->email = request()->email;
-        $user->isbanned = false;
-        $user->national_id = request()->national_id;
-        $user->image_url = request()->image_url;
-
+        $imageName = $this->uploadImage("users", $request->file('image'));
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->national_id = $request->national_id;
+        $user->image_url = $imageName;
+        logger($imageName);
         try {
             $user->save();
         } catch (\Exception $e) {
-            return $this->createResponse(500, [], false, "server error");
+            return $this->createResponse(200, [], false, $e->getMessage());
         }
 
         return $this->createResponse(200, $user);
