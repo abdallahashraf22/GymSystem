@@ -21,7 +21,3 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-
-Route::get('/login', function (User $user){
-    echo $user;
-})->name("login");

@@ -23,20 +23,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-##### Branches from CityManagerController  ##############
-Route::get('/citybranches', [CityManagerController::class, 'getAllBranches']);
-Route::post('/createbranch', [CityManagerController::class, 'createBranch']);
-Route::post('/editbranch/{branchId}', [CityManagerController::class, 'editBranch']);
-Route::delete('/deletebranch/{branchId}', [CityManagerController::class, 'deleteBranch']);
-#######################################
-
-##### Managers from CityManagerController  ######
-Route::get('/managers', [CityManagerController::class, "indexManagers"]);
-Route::post('/managers', [CityManagerController::class, "storeManager"]);
-Route::post('/managers/{managerId}', [CityManagerController::class, "updateManager"]);
-Route::delete('/managers/{managerId}', [CityManagerController::class, "destroyManager"]);
-###########################
-
 ##### for JWT Auth ######
 Route::group([
     'middleware' => 'api',
@@ -54,7 +40,6 @@ Route::get('/users/{user}', [UserController::class, "show"]);
 Route::post('/users', [UserController::class, "store"]);
 Route::post('/users/{user}', [UserController::class, "update"]);
 Route::delete('/users/{user}', [UserController::class, "destroy"]);
-Route::get('/users/branch/{branch}', [UserController::class, "getBranchUsers"]);
 ###############################
 
 ###### CityManagers from UserController ######
@@ -135,20 +120,15 @@ Route::group([
 
 ####### Authentication ####################
 // Register
-Route::post('/register', [ApiAuthController::class, 'register'])->name('auth.handleRegister');
-// Login
-//Route::get('/login', [ApiAuthController::class, 'test'])->name('login');
+Route::post('/register', [AuthController::class, 'register'])->name('auth.handleRegister');
 // Logout
-Route::post('/logout', [ApiAuthController::class, 'logout'])->name('auth.logout');
+Route::post('/logout', [AuthController::class, 'logout'])->name('auth.logout');
+// Verification
+Route::post('email/verification-notification', [AuthController::class, 'sendVerificationEmail']);
 
-Route::post('email/verification-notification', [EmailVerificationController::class, 'sendVerificationEmail'])
-    ->middleware(['auth']);
-Route::get('verify-email/{id}/{hash}', [EmailVerificationController::class, 'verify'])
+Route::get('verify-email/{id}/{hash}', [AuthController::class, 'verify'])
     ->name('verification.verify')
-    ->middleware(['auth', 'signed']);
-
-//Route::get('/login/{id}', [ApiAuthController::class, 'test'])->name('login');
-
+    ->middleware(['signed', 'throttle:6,1']);
 
 
 #### dashboard routes ####
