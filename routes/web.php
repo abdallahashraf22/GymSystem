@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CityController;
 use App\Http\Controllers\CoachController;
+use App\Models\User;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CityManagerController;
 use App\Http\Controllers\UserController;
@@ -21,4 +22,6 @@ Route::get('/', function () {
 });
 
 
-
+Route::get('/login', function (User $user){
+    echo $user;
+})->name("login");

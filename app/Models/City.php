@@ -11,8 +11,7 @@ class City extends Model
     use HasFactory;
 
     protected $fillable = [
-        'name',
-        'manager_id'
+        'name', 'manager_id'
     ];
     protected static function booted()
     {

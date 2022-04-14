@@ -2,116 +2,89 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Branch;
-use App\Models\City;
+use App\Http\Requests\CityManager\CreateRequest;
+use App\Http\Requests\CityManager\UpdateRequest;
+use App\Http\Traits\ResponseTrait;
 use App\Models\User;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class CityManagerController extends Controller
 {
-    // City Branches
-    public function getAllBranches()
-    {
-        // Here we will get Loggedin Manager ID
+    use ResponseTrait;
 
-        $managed_city = City::select("*")
-            ->where("id", "=", "1")
-            ->first();
-        return response()->json($managed_city->branches);
-    }
-
-    public function createBranch(Request $request)
-    {
-        Branch::create([
-            "id" => $request->id,
-            "name" => $request->name,
-            "city_id" => $request->city_id,
-        ]);
-        $SuccessBranchCreation = "Branch Created Successfully";
-        return response()->json($SuccessBranchCreation);
-    }
-
-    public function editBranch(Request $request, $id)
-    {
-        $branch = Branch::findOrFail($id);
-        $branch->update([
-            "id" => $id,
-            "name" => $request->name,
-            "city_id" => $request->city_id
-            // There is a Problem here in key city_id
-            // "city_id"=>$request->header('city_id')
-        ]);
-        $SuccessBranchUpdate = "Branch Updated Successfully";
-        return response()->json($SuccessBranchUpdate);
-    }
-
-    public function deleteBranch(Request $request, $id)
-    {
-        $branch = Branch::findOrFail($id);
-        $branch->delete();
-        $SuccessBranchDelete = "Branch Deleted Successfully";
-        return response()->json($SuccessBranchDelete);
-    }
-    // Branches Mangers
-    public function indexManagers()
-    {
-        // Here 1 is the City_Id as Static Value
-        $branches = Branch::where("city_id", 1)->get("id");
-        $managers = DB::table('users')
-            ->select('*')
-            ->where("role", "=", "branch manager")
-            ->whereIn('branch_id', $branches)
-            ->get();
-        return response()->json($managers);
-    }
-
-    public function storeManager(Request $request)
+    # City Managers
+    public function index()
     {
         try {
-            $manager = User::create([
+            $cityManagers = User::where("role", "city manager")->get();
+        } catch (\Exception $e) {
+
+            return $this->createResponse(500, [], false, "Server error");
+        }
+        return $this->createResponse(200, $cityManagers);
+    }
+
+    public function show(int $id)
+    {
+
+        try {
+            $cityManager = User::find($id);
+        } catch (\Exception $e) {
+            return $this->createResponse(500, [], false, "server error");
+        }
+        return $this->createResponse(200, $cityManager);
+
+    }
+
+    public function store(CreateRequest $request)
+    {
+        try {
+            $cityManager = User::create([
                 'name' => $request->name,
                 'email' => $request->email,
                 'isbanned' => false,
                 'password' => bcrypt($request->password),
                 'national_id' => $request->national_id,
-                'role' => "branch manager",
+                'role' => "city manager",
                 'image_url' => $request->image_url,
-                'branch_id' => $request->branch_id
             ]);
+            DB::table('cities')
+                ->where('id', $request->city_id)
+                ->update(['manager_id' => $cityManager->id]);
         } catch (\Exception $e) {
-
-            return response()->json($e->getMessage());
+            return $this->createResponse(500, [], false, "Server Error");
         }
 
-        return response()->json($manager);
+        return $this->createResponse(200, $cityManager);
     }
 
-    public function updateManager(Request $request, $managerId)
+
+    public function update(UpdateRequest $request, int $cityManagerId)
     {
-        $manager = User::findOrFail($managerId);
-        $manager->update([
-            "name" => $request->name,
-            "email" => $request->email,
-            "isbanned" => $request->isbanned,
-            "password" => $request->password,
-            "national_id" => $request->national_id,
-            "image_url" => $request->image_url,
-            "branch_id" => $request->branch_id
-        ]);
-        $SuccessManagerUpdate = "Manager Updated Successfully";
-        return response()->json($SuccessManagerUpdate);
+        try {
+            $cityManager = User::find($cityManagerId);
+            $cityManager->update([
+                'name' => $request->name,
+                'email' => $request->email,
+                'national_id' => $request->national_id,
+                'image_url' => $request->image_url,
+            ]);
+        } catch (\Exception $e) {
+            return $this->createResponse(500, [], false, $e->getMessage());
+        }
+        return $this->createResponse(200, $cityManager);
     }
 
-    public function destroyManager(int $managerId)
+    public function destroy(int $id)
     {
-        if (!$manager = User::findOrFail($managerId))
+        if (!$user = User::find($id))
             return "not found";
         try {
-            $manager->delete();
+            $user->delete();
         } catch (\Exception $e) {
             return response()->json($e);
         }
-        return response()->json(["isSuccess" => true]);
+        return $this->createResponse(200, "Deleted Successfully");
     }
+
 }

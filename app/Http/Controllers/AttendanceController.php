@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Traits\ResponseTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class AttendanceController extends Controller
 {
-
+    use ResponseTrait;
     public function index()
     {
 
@@ -28,18 +29,7 @@ class AttendanceController extends Controller
             ->select('users.name as UserName', 'sessions.name as SessionName', 'user_session.updated_at as AttendanceTime')
             ->where('sessions.branch_id', '=', $branchId)
             ->get();
-        return response()->json($AttendanceSheet);
-    }
+        return $this->createResponse(200, $AttendanceSheet);
 
-
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-
-    public function destroy($id)
-    {
-        //
     }
 }
