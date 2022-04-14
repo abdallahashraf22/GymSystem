@@ -23,6 +23,11 @@ class City extends Model
         return $this->belongsTo(User::class, "manager_id");
     }
 
+    public function manager()
+    {
+        return $this->belongsTo(User::class, "manager_id");
+    }
+
     public function branches()
     {
         return $this->hasMany(Branch::class);

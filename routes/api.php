@@ -49,10 +49,12 @@ Route::delete('/managers/{managerId}', [CityManagerController::class, "destroyMa
 ##### users from UserController ######
 Route::get('/users', [UserController::class, "index"]);
 Route::get('/users/paginate', [UserController::class, "paginate"]);
+Route::get('/users/paginate/email', [UserController::class, "getSomeByEmail"]);
 Route::get('/users/{user}', [UserController::class, "show"]);
 Route::post('/users', [UserController::class, "store"]);
 Route::post('/users/{user}', [UserController::class, "update"]);
 Route::delete('/users/{user}', [UserController::class, "destroy"]);
+Route::get('/users/branch/{branch}', [UserController::class, "getBranchUsers"]);
 ###############################
 
 ###### CityManagers from UserController ######
@@ -72,19 +74,25 @@ Route::delete('/gymmanagers/{gymmanager}', [GymMangerController::class, "destroy
 
 #### Sessions routes #####
 Route::get('/sessions', [SessionController::class, 'index']);
+Route::get('/oldsessions', [SessionController::class, 'get_old_sessions']);
 Route::post('/sessions', [SessionController::class, 'store']);
 Route::get('/sessions/{session}', [SessionController::class, 'show']);
 Route::put('/sessions/{session}', [SessionController::class, 'update']);
 Route::delete('/sessions/{session}', [SessionController::class, 'destroy']);
+###########################
+Route::post('/attend', [AttendanceController::class, 'store']);
 ###########################
 
 
 #### packages routes #####
 Route::get('/packages', [PackageController::class, 'index']);
 Route::post('/packages', [PackageController::class, 'store']);
+Route::post('/packages/buyToUser', [PackageController::class, 'buyToUser']);
 Route::get('/packages/{package}', [PackageController::class, 'show']);
+// Route::post('/packages/subscribe', [PackageController::class, 'subscribe']);
 Route::post('/packages/{package}', [PackageController::class, 'update']);
 Route::delete('/packages/{package}', [PackageController::class, 'destroy']);
+
 ###########################
 
 
@@ -111,8 +119,17 @@ Route::apiResource('attendance', AttendanceController::class);
 ################################################
 
 
-#### Branches routes ####
-Route::get('/branches', [BranchController::class, 'index']);
+########### Branches routes ########
+Route::group([
+    'middleware' => 'auth:api',
+], function ($router) {
+    Route::get('/branches', [BranchController::class, 'index']);
+    Route::get('/branches/paginate', [BranchController::class, "paginate"]);
+    Route::get('/branches/{branch}', [BranchController::class, 'show']);
+    Route::post('/branches', [BranchController::class, "store"]);
+    Route::post('/branches/{branch}', [BranchController::class, "update"]);
+    Route::delete('/branches/{branch}', [BranchController::class, "destroy"]);
+});
 #######################################
 
 
@@ -134,3 +151,16 @@ Route::get('verify-email/{id}/{hash}', [EmailVerificationController::class, 'ver
 
 
 
+#### dashboard routes ####
+// Route::get('/dashboard/revenue/branch', [DashBoardController::class, 'getBranchRevenue']);
+Route::get('/dashboard/branches', [DashBoardController::class, 'getBranches']);
+Route::post('/dashboard/branches/monthly', [DashBoardController::class, 'getBranchMonthlyRevenue']);
+
+###########################
+
+
+#### statistics routes ####
+Route::get('/statistics/revenue', [StatisticsController::class, 'getRevenue']);
+
+
+###########################

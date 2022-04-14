@@ -9,12 +9,13 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Tymon\JWTAuth\Contracts\JWTSubject;
+use Laravel\Cashier\Billable;
 
 
 
 class User extends Authenticatable implements JWTSubject, MustVerifyEmail
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable, Billable;
 
 
     protected $fillable = [
@@ -25,7 +26,8 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
         "national_id",
         "image_url",
         "isDeleted",
-        "remember_token"
+        "remember_token",
+        "branch_id"
     ];
 
 
@@ -48,7 +50,7 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
 
     public function sessions()
     {
-        return $this->belongsToMany(Session::class);
+        return $this->belongsToMany(Session::class, 'user_session')->withTimestamps();
     }
 
     public function city()
@@ -59,6 +61,11 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
     public function branch()
     {
         return $this->belongsTo(Branch::class);
+    }
+
+    public function packages()
+    {
+        return $this->belongsToMany(Package::class, "packages_users_branches");
     }
 
 
@@ -72,9 +79,12 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
 
     public function getJWTCustomClaims()
     {
+
         return [
             "email" => $this->email,
-            "role" => $this->role
+            "role" => $this->role,
+            "city_id" => $this->city ? $this->city->id : null,
+            "branch_id" => $this->branch_id
         ];
     }
 }

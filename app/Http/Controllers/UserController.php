@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\User\CreateUserRequest;
 use App\Http\Requests\User\UpdateUserRequest;
 use App\Http\Traits\ResponseTrait;
+use App\Http\Traits\UploadImageTrait;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -14,7 +15,7 @@ use Illuminate\Auth\Events\Registered;
 
 class UserController extends Controller implements MustVerifyEmail
 {
-    use ResponseTrait;
+    use ResponseTrait, UploadImageTrait;
 
     public function __construct()
     {
@@ -25,6 +26,21 @@ class UserController extends Controller implements MustVerifyEmail
     {
         try {
             $users = User::where("role", "user")->get();
+        } catch (\Exception $e) {
+
+            return $this->createResponse(500, [], false, "server error");
+        }
+        return $this->createResponse(200, $users);
+    }
+
+    public function getSomeByEmail()
+    {
+        try {
+            $users = User::where("role", "user")->when(request("search"), function ($q) {
+                $q->where(function ($query) {
+                    $query->where("email", "like", "%" . request("search") . "%");
+                });
+            })->limit(5)->get(['id', 'email']);
         } catch (\Exception $e) {
 
             return $this->createResponse(500, [], false, "server error");
@@ -45,20 +61,14 @@ class UserController extends Controller implements MustVerifyEmail
         try {
             $users = User::where("role", "user")->when(request("search"), function ($q) {
                 $q->where(function ($query) {
-                    $query->where("name", "like", "%" . request("search") . "%")->orWhere("email", "like", "%" . request("search") . "%");
+                    $query->where("name", "like", "%" . request("search") . "%")
+                        ->orWhere("email", "like", "%" . request("search") . "%");
                 });
-            })->orderBy($sortField, $sortDirection)->paginate(3);
+            })->orderBy($sortField, $sortDirection)->paginate(5);
         } catch (\Throwable $th) {
             return $this->createResponse(500, [], false, "server error");
         }
 
-        $users = User::where("role", "user")->when(request("search"), function ($q) {
-            $q->where(function ($query) {
-                $query->where("name", "like", "%" . request("search") . "%")->orWhere("email", "like", "%" . request("search") . "%");
-            });
-        })->orderBy($sortField, $sortDirection)->paginate(5);
-
-        //$users = User::where("role", "user")->get();
         return $this->createResponse(200, $users);
     }
 
@@ -74,6 +84,7 @@ class UserController extends Controller implements MustVerifyEmail
 
     public function store(CreateUserRequest $request)
     {
+        $imageName = $this->uploadImage("users", $request->file('image'));
         try {
             $user = User::create([
                 'name' => $request->name,
@@ -82,7 +93,7 @@ class UserController extends Controller implements MustVerifyEmail
                 'password' => bcrypt($request->password),
                 'national_id' => $request->national_id,
                 'role' => "user",
-                'image_url' => $request->image_url,
+                'image_url' => $imageName,
             ]);
 
         } catch (\Exception $e) {
@@ -95,16 +106,16 @@ class UserController extends Controller implements MustVerifyEmail
 
     public function update(UpdateUserRequest $request, User $user)
     {
-        $user->name = request()->name;
-        $user->email = request()->email;
-        $user->isbanned = false;
-        $user->national_id = request()->national_id;
-        $user->image_url = request()->image_url;
-
+        $imageName = $this->uploadImage("users", $request->file('image'));
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->national_id = $request->national_id;
+        $user->image_url = $imageName;
+        logger($imageName);
         try {
             $user->save();
         } catch (\Exception $e) {
-            return $this->createResponse(500, [], false, "server error");
+            return $this->createResponse(200, [], false, $e->getMessage());
         }
 
         return $this->createResponse(200, $user);
@@ -119,16 +130,10 @@ class UserController extends Controller implements MustVerifyEmail
             $user->isDeleted = true;
             $user->save();
         } catch (\Exception $e) {
-            return response()->json($e);
+            return $this->createResponse(500, [], false, "server error");
         }
-        // try {
-        //     $user->delete();
-        // } catch (\Exception $e) {
-        //     return response()->json($e);
-        // }
         return $this->createResponse(200, "deleted successfully");
     }
-
 
 
 

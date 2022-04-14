@@ -13,7 +13,8 @@ class Branch extends Model
         "id",
         "name",
         "city_id",
-        "isDeleted"
+        "isDeleted",
+        "img"
     ];
 
     /**
@@ -29,6 +30,11 @@ class Branch extends Model
     public function city()
     {
         return $this->belongsTo(City::class);
+    }
+
+    public function cityManager()
+    {
+        return $this->hasOneThrough(User::class, City::class, "manager_id", 'city_id');
     }
 
 

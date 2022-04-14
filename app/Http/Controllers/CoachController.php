@@ -3,11 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\CoachResource;
+use App\Http\Traits\ResponseTrait;
 use App\Models\Coach;
 use Illuminate\Http\Request;
 
 class CoachController extends Controller
 {
+    use ResponseTrait;
+
     public function index(){
         $coach = Coach::get();
         return CoachResource::collection($coach);
@@ -38,7 +41,9 @@ class CoachController extends Controller
         }
         try{
             $coach = Coach::findOrFail($id);
-            $coach->delete($id);
+            $coach->update([
+                'isDeleted'=>true
+            ]);
             $message = "Deleted Successfully";
             return response()->json($message);
         }catch (\Exception $e){
