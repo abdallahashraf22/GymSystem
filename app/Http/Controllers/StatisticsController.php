@@ -9,8 +9,8 @@ class StatisticsController extends Controller
 {
     public function getRevenue(Request $request)
     {
-        $request['city_id'] = "1";
-        $request['branch_id'] = "31 ";
+        $request['city_id'] = "all";
+        $request['branch_id'] = "all";
 
 
         $revenue = DB::table('packages_users_branches as pub')

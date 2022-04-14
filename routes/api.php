@@ -38,12 +38,12 @@ Route::delete('/managers/{managerId}', [CityManagerController::class, "destroyMa
 ###########################
 
 ##### for JWT Auth ######
-//Route::group([
-//    'middleware' => 'api',
-//    'prefix' => 'auth'
-//], function ($router) {
-//    Route::post('login', [AuthController::class, "login"]);
-//});
+Route::group([
+    'middleware' => 'api',
+    'prefix' => 'auth'
+], function ($router) {
+    Route::post('login', [AuthController::class, "login"]);
+});
 ###########################
 
 ##### users from UserController ######
