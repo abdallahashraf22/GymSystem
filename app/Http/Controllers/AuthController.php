@@ -47,10 +47,9 @@ class AuthController extends Controller
             return $this->createResponse(500, [], false, $e->getMessage());
         }
         $user->sendEmailVerificationNotification();
-//        event(new Registered($user));
-//        Mail::to($request->email)->send(new OrderShipped($user));
+        //        event(new Registered($user));
+        //        Mail::to($request->email)->send(new OrderShipped($user));
         return $this->createResponse(200, $user);
-
     }
 
 
@@ -60,23 +59,24 @@ class AuthController extends Controller
         $credentials = request(['email', 'password']);
 
         if (!$token = JWTAuth::attempt($credentials)) {
-            return response()->json(['error' => 'Unauthorized'], 401);
+            // return response()->json(['error' => 'Unauthorized'], 401);
+            return $this->createResponse(200, [], false, ["message" => "email or password are in correct"]);
         }
         $user = User::where('email', request('email'));
         $user->update([
-           'last_login'=>now()
+            'last_login' => now()
         ]);
-        return $this->respondWithToken($token);
+        return $this->createResponse(200, $this->respondWithToken($token));
     }
 
 
     protected function respondWithToken($token)
     {
-        return response()->json([
+        return [
             'access_token' => $token,
             'token_type' => 'bearer',
             'expires_in' => Auth::factory()->getTTL() * 60
-        ]);
+        ];
     }
 
 
@@ -84,18 +84,17 @@ class AuthController extends Controller
     {
         $user = User::find($request["id"]);
         if ($user->hasVerifiedEmail()) {
-            $message ="This Email has already been Verified";
+            $message = "This Email has already been Verified";
         }
 
         if ($user->markEmailAsVerified()) {
             event(new Verified($user));
-            $message ="You Have Verified your Email Successfully";
+            $message = "You Have Verified your Email Successfully";
         }
 
-        return view("Verify", [ "message" => $message ]);
-//        return [
-//            'message' => 'Email has been verified'
-//        ];
+        return view("Verify", ["message" => $message]);
+        //        return [
+        //            'message' => 'Email has been verified'
+        //        ];
     }
-
 }
