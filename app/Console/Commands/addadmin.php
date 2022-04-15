@@ -19,7 +19,7 @@ class addadmin extends Command
      *
      * @var string
      */
-    protected $description = 'Create an admin user, arguments are "command" "name" "email" "password"';
+    protected $description = 'Create an admin user, arguments are make:admin" name email password';
 
     /**
      * Execute the console command.

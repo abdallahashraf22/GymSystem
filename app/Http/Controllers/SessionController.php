@@ -2,15 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Middleware\CheckBranchId;
 use App\Http\Requests\Session\StoreSessionRequest;
 use App\Http\Requests\Sessions\CreateSessionRequest;
 use App\Http\Resources\SessionResource;
-use App\Http\Resources\CoachResource;
 use App\Http\Traits\ResponseTrait;
 use App\Models\Session;
-use App\Rules\SessionOverlap;
-use Illuminate\Http\Request;
+
 
 class SessionController extends Controller
 {
@@ -85,5 +82,6 @@ class SessionController extends Controller
         $session = Session::where("end_time", "<=", now())->where('branch_id', $branch_id)->get();
         return SessionResource::collection($session);
     }
+
 
 }
