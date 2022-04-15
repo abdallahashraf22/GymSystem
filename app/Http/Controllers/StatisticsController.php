@@ -7,12 +7,14 @@ use Illuminate\Support\Facades\DB;
 
 class StatisticsController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware("auth")->except([]);
+        $this->middleware("isBranchManager")->except([]);
+    }
+
     public function getRevenue(Request $request)
     {
-        $request['city_id'] = "all";
-        $request['branch_id'] = "all";
-
-
         $revenue = DB::table('packages_users_branches as pub')
             ->select(
                 DB::raw("YEAR(pub.created_at) as year"),
@@ -24,9 +26,13 @@ class StatisticsController extends Controller
             ->join('branches as b', 'pub.branch_id', '=', 'b.id')
             ->join('cities as c', 'c.id', '=', 'b.city_id')
             ->when(request('city_id') != 'all', function ($query) {
-                $query->where("c.id", request('city_id'));
+                $query->where(function ($q) {
+                    $q->where("c.id", request("city_id"));
+                });
             })->when(request('branch_id') != 'all', function ($query) {
-                $query->where("b.id", request('branch_id'));
+                $query->where(function ($q) {
+                    $q->where("b.id", request("branch_id"));
+                });
             })
             ->get();
 
