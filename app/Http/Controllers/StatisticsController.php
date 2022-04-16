@@ -38,4 +38,25 @@ class StatisticsController extends Controller
 
         return response()->json($revenue);
     }
+
+    public function getTopUsers(Request $request)
+    {
+        $topUsers = DB::table("packages_users_branches as pub")
+            ->select(DB::raw("name"), DB::raw("sum(package_sessions) as 'total_sessions'"))
+            ->groupBy("name")
+            ->orderByDesc("total_sessions")
+            ->join("users as u", "pub.user_id", "=", "u.id")
+            // ->join('cities as c', 'c.id', '=', 'b.city_id')
+            // ->when(request('city_id') != 'all', function ($query) {
+            //     $query->where(function ($q) {
+            //         $q->where("c.id", request("city_id"));
+            //     });
+            // })->when(request('branch_id') != 'all', function ($query) {
+            //     $query->where(function ($q) {
+            //         $q->where("b.id", request("branch_id"));
+            //     });
+            // })
+            ->get();
+        return response()->json($topUsers);
+    }
 }

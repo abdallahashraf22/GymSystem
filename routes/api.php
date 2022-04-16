@@ -132,16 +132,17 @@ Route::get('verify-email/{id}/{hash}', [AuthController::class, 'verify'])
     ->middleware(['signed', 'throttle:6,1']);
 
 
-#### dashboard routes ####
-// Route::get('/dashboard/revenue/branch', [DashBoardController::class, 'getBranchRevenue']);
-Route::get('/dashboard/branches', [DashBoardController::class, 'getBranches']);
-Route::post('/dashboard/branches/monthly', [DashBoardController::class, 'getBranchMonthlyRevenue']);
+// #### dashboard routes ####
+// // Route::get('/dashboard/revenue/branch', [DashBoardController::class, 'getBranchRevenue']);
+// Route::get('/dashboard/branches', [DashBoardController::class, 'getBranches']);
+// Route::post('/dashboard/branches/monthly', [DashBoardController::class, 'getBranchMonthlyRevenue']);
 
-###########################
+// ###########################
 
 
 #### statistics routes ####
 Route::get('/statistics/revenue', [StatisticsController::class, 'getRevenue']);
+Route::get('/statistics/top-users', [StatisticsController::class, 'getTopUsers']);
 
 
 ###########################
