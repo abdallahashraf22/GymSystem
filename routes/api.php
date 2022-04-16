@@ -59,6 +59,7 @@ Route::delete('/gymmanagers/{gymmanager}', [GymMangerController::class, "destroy
 
 #### Sessions routes #####
 Route::get('/sessions', [SessionController::class, 'index']);
+Route::get('/sessions/paginate', [SessionController::class, 'paginate']);
 Route::get('/oldsessions', [SessionController::class, 'get_old_sessions']);
 Route::post('/sessions', [SessionController::class, 'store']);
 Route::get('/sessions/{session}', [SessionController::class, 'show']);
