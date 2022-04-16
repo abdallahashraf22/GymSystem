@@ -95,7 +95,7 @@ class UserController extends Controller implements MustVerifyEmail
                 'role' => "user",
                 'image_url' => $imageName,
             ]);
-
+            
         } catch (\Exception $e) {
             // Email
             return $this->createResponse(500, [], false, "server error");

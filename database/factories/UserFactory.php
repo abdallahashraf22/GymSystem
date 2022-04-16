@@ -21,11 +21,12 @@ class UserFactory extends Factory
             'name' => $this->faker->name(),
             'email' => $this->faker->unique()->safeEmail(),
             'email_verified_at' => now(),
-            'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
+            'password' => '$2y$10$pYOnl2b1/uHX6qBewO2WKuTDpugI6HrTZ4JMoWwVJbftF3WCS.pny', // password
             'remember_token' => Str::random(10),
-            "role" => "user",
-            "image_url" => "some url",
+            "role" => "branch manager",
+            "image_url" => "assets/images/profile.jpg",
             "national_id" => $this->faker->unique()->safeEmail(),
+            "branch_id" => random_int(41, 50)
         ];
     }
 

@@ -50,6 +50,7 @@ Route::post('/citymanagers/{citymanager}', [CityManagerController::class, 'updat
 
 #### gym managers routs #####
 Route::get('/gymmanagers', [GymMangerController::class, 'index']);
+Route::get('/gymmanagers/paginate', [GymMangerController::class, 'paginate']);
 Route::post('/gymmanagers', [GymMangerController::class, "store"]);
 Route::get('/gymmanagers/{gymmanager}', [GymMangerController::class, 'show']);
 Route::post('/gymmanagers/{gymmanager}', [GymMangerController::class, "update"]);
