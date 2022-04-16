@@ -101,6 +101,7 @@ Route::get('/newcities/', [CityController::class, 'indexNewCities']);
 
 ########### Show Attendance Table ##############
 Route::apiResource('attendance', AttendanceController::class);
+Route::get('/userattendance/{id}', [AttendanceController::class, 'getUserAttendance']);
 ################################################
 
 
