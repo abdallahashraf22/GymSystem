@@ -2,14 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Traits\ResponseTrait;
 use App\Models\User;
 use Illuminate\Http\Request;
 
 class GymMangerController extends Controller
 {
 
+    use ResponseTrait;
     public function __construct()
     {
+        $this->middleware('auth');
         $this->middleware('isCityManager');
     }
 
@@ -19,6 +22,30 @@ class GymMangerController extends Controller
         $managers = User::where('role', 'branch manager')->with('branch')->get();
         return response()->json($managers);
     }
+
+    public function paginate()
+    {
+        $sortField = request('sortField', "created_at");
+        if (!in_array($sortField, ['name', 'email', 'created_at']))
+            $sortField = "created_at";
+
+        $sortDirection = request('sortDirection', "desc");
+        if (!in_array($sortDirection, ['asc', 'desc']))
+            $sortDirection = "desc";
+        try {
+            $users = User::where("role", "branch manager")->when(request("search"), function ($q) {
+                $q->where(function ($query) {
+                    $query->where("name", "like", "%" . request("search") . "%")
+                        ->orWhere("email", "like", "%" . request("search") . "%");
+                });
+            })->orderBy($sortField, $sortDirection)->paginate(5);
+        } catch (\Throwable $th) {
+            return $this->createResponse(500, [], false, "server error");
+        }
+
+        return $this->createResponse(200, $users);
+    }
+
 
     public function store(Request $request)
     {
