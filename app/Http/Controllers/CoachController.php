@@ -27,9 +27,7 @@ class CoachController extends Controller
 
     public function store(Request $request)
     {
-        logger($request);
         $imageName = $this->uploadImage("coaches", $request->file('image'));
-        logger($imageName);
         try {
             Coach::create([
                 'name' => $request->name,
@@ -63,8 +61,10 @@ class CoachController extends Controller
     public function update(Request $request, $id)
     {
         $coach = Coach::findOrFail($id);
+        $imageName = $this->uploadImage("coaches", $request->file('image'));
         $coach->update([
             'name' => $request->name,
+            'image_url' => $imageName
         ]);
         $success_message = "Coach was updated successfully";
         return response()->json($success_message);
