@@ -99,18 +99,23 @@ class SessionController extends Controller
 
         try {
             $branch_id = request('branch_id');
-            $sessions = Session::where("end_time", ">=", now())->where('branch_id',$branch_id);
-            $sessions=$sessions->when(request("search"),function ($q) {
+            $sessions = Session::where("end_time", ">=", now())->where('branch_id',$branch_id)->when(request("search"),function ($q) {
                 $q->where(function ($query) {
                     $query->where("name", "like", "%" . request("search") . "%");
                 });
-            })->orderBy($sortField, $sortDirection)->paginate(5);
+            })->orderBy($sortField, $sortDirection);
 
+            $sessions = SessionResource::collection($sessions->paginate(5));
         } catch (\Throwable $th) {
             return $this->createResponse(500, [], false, "server error");
         }
 
-        return $this->createResponse(200,  $sessions);
+        return [
+            "data" => $sessions->response()->getData(true),
+            "isSuccess" => true,
+            "errors" => [],
+            "statusCode" => 200
+        ];
     }
 
 }
