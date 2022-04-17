@@ -60,7 +60,7 @@ class StatisticsController extends Controller
                         $q->where("b.id", request("branch_id"));
                     });
                 })
-                ->select("pub.user_id", "u.name", DB::raw("SUM(pub.enrollement_price) as totoal_price"), DB::raw("SUM(pub.remianing_sessions) as totoal_sessions"))
+                ->select("pub.user_id", "u.name", DB::raw("SUM(pub.enrollement_price) as totoal_price"), DB::raw("SUM(pub.package_sessions) as totoal_sessions"))
                 ->orderByDesc(DB::raw("SUM(pub.enrollement_price)"))->limit(10)->get();
         } catch (Exception $e) {
             return $this->createResponse(200, [], false, "server error");

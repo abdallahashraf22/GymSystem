@@ -22,8 +22,8 @@ class Coach extends Model
 
     protected $fillable = [
         'name',
-        'session_id',
-        "isDeleted"
+        "isDeleted",
+        "image_url"
     ];
 
     public function sessions()

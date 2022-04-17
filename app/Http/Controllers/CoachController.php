@@ -4,57 +4,67 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\CoachResource;
 use App\Http\Traits\ResponseTrait;
+use App\Http\Traits\UploadImageTrait;
 use App\Models\Coach;
 use Illuminate\Http\Request;
 
 class CoachController extends Controller
 {
-    use ResponseTrait;
+    use ResponseTrait, UploadImageTrait;
 
-    public function index(){
+    public function index()
+    {
         $coach = Coach::get();
         return CoachResource::collection($coach);
         return response()->json($coach);
     }
 
-    public function show($id){
+    public function show($id)
+    {
         $coach = Coach::find($id);
         return response()->json($coach);
     }
 
-    public function store(Request $request){
-        try{
+    public function store(Request $request)
+    {
+        logger($request);
+        $imageName = $this->uploadImage("coaches", $request->file('image'));
+        logger($imageName);
+        try {
             Coach::create([
                 'name' => $request->name,
+                'image_url' => $imageName
             ]);
-        }catch(\Exception $e){
+        } catch (\Exception $e) {
             return response()->json($e->getMessage());
         }
         $success_message = "Coach was created successfully";
         return response()->json($success_message);
     }
 
-    public function destroy($id){
+    public function destroy($id)
+    {
         $message = "Coach was not found";
-        if(!Coach::find($id)){
+        if (!Coach::find($id)) {
             return response()->json($message);
         }
-        try{
+        try {
             $coach = Coach::findOrFail($id);
             $coach->update([
-                'isDeleted'=>true
+                'isDeleted' => true
             ]);
             $message = "Deleted Successfully";
             return response()->json($message);
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             return response()->json($e);
         }
     }
 
-    public function update(Request $request, $id){
+    public function update(Request $request, $id)
+    {
         $coach = Coach::findOrFail($id);
-        $coach ->update([
-            'name'=> $request->name,
+        $coach->update([
+            'name' => $request->name,
         ]);
         $success_message = "Coach was updated successfully";
         return response()->json($success_message);
