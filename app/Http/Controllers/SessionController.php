@@ -30,6 +30,7 @@ class SessionController extends Controller
         return new SessionResource($session);
     }
 
+
     public function store(CreateSessionRequest $request){
         try{
             $session = Session::create([
@@ -84,4 +85,34 @@ class SessionController extends Controller
     }
 
 
+
+    public function paginate()
+    {
+
+        $sortField = request('sortField', "start_time");
+        if (!in_array($sortField, ['name','start_time']))
+            $sortField = "start_time";
+
+        $sortDirection = request('sortDirection', "desc");
+        if (!in_array($sortDirection, ['asc', 'desc']))
+            $sortDirection = "desc";
+
+        try {
+            $branch_id = request('branch_id');
+            $sessions = Session::where("end_time", ">=", now())->where('branch_id',$branch_id);
+            $sessions=$sessions->when(request("search"),function ($q) {
+                $q->where(function ($query) {
+                    $query->where("name", "like", "%" . request("search") . "%");
+                });
+            })->orderBy($sortField, $sortDirection)->paginate(5);
+
+        } catch (\Throwable $th) {
+            return $this->createResponse(500, [], false, "server error");
+        }
+
+        return $this->createResponse(200,  $sessions);
+    }
+
 }
+
+
