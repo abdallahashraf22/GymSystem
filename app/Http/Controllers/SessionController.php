@@ -52,6 +52,10 @@ class SessionController extends Controller
         }
         try{
             $session = Session::findOrFail($id);
+            $users = $session->users;
+            if(count($users)){
+                return $this->createResponse(200, [], false, "Session was attended by a user; can't delete it");
+            }
             $session->update([
               'isDeleted'=>true
             ]);
