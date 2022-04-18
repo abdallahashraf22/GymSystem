@@ -15,6 +15,7 @@ class UserPackage extends Model
         'branch_id',
         'enrollement_price',
         'remianing_sessions',
+        "package_sessions"
     ];
 
     protected $table = 'packages_users_branches';

@@ -163,7 +163,8 @@ class PackageController extends Controller
                 'user_id' => $request->user_id,
                 'branch_id' => $request->branch_id,
                 'enrollement_price' => $package->price,
-                'remianing_sessions' => $package->number_of_sessions
+                'remianing_sessions' => $package->number_of_sessions,
+                'package_sessions' => $package->number_of_sessions
             ]);
         } catch (\Exception $e) {
             return $this->createResponse(500, [], false, $e->getMessage());
