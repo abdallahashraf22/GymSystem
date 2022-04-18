@@ -134,6 +134,8 @@ Route::post('email/verification-notification', [AuthController::class, 'sendVeri
 Route::get('verify-email/{id}/{hash}', [AuthController::class, 'verify'])
     ->name('verification.verify')
     ->middleware(['signed', 'throttle:6,1']);
+//Route::get('/sendnotification', [AuthController::class, 'sendGreetNotification']);
+
 
 
 // #### dashboard routes ####

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Traits\ResponseTrait;
+use App\Notifications\GreetVerifiedUser;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
@@ -11,6 +12,7 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
@@ -21,7 +23,7 @@ class AuthController extends Controller
 
     public function __construct()
     {
-        $this->middleware('auth:api')->except(["login", "sendVerificationEmail", "verify", "register"]);
+        $this->middleware('auth:api')->except(["login", "sendVerificationEmail", "verify", "register", "sendGreetNotification"]);
     }
 
     public function register(Request $request)
@@ -47,8 +49,6 @@ class AuthController extends Controller
             return $this->createResponse(500, [], false, $e->getMessage());
         }
         $user->sendEmailVerificationNotification();
-        //        event(new Registered($user));
-        //        Mail::to($request->email)->send(new OrderShipped($user));
         return $this->createResponse(200, $user);
     }
 
@@ -90,11 +90,21 @@ class AuthController extends Controller
         if ($user->markEmailAsVerified()) {
             event(new Verified($user));
             $message = "You Have Verified your Email Successfully";
+            $user->notify(new GreetVerifiedUser());
+
         }
 
         return view("Verify", ["message" => $message]);
         //        return [
         //            'message' => 'Email has been verified'
         //        ];
+    }
+
+    public function sendGreetNotification()
+    {
+        $welcomeUsers = User::whereNotNull('email_verified_at')->get();
+        foreach ($welcomeUsers as $welcomeUser) {
+            $welcomeUser->notify(new GreetVerifiedUser());
+        }
     }
 }

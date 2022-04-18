@@ -20,6 +20,6 @@ class OrderShipped extends Mailable
 
     public function build()
     {
-        return $this->view('Verify', ["user"=> $this->user]);
+        return $this->view('welcome', ["user"=> $this->user]);
     }
 }
