@@ -16,6 +16,9 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->command('email:non_logged_users')->daily();
+        $schedule->command('queue:work')
+            ->everyMinute();
+
     }
 
     /**
