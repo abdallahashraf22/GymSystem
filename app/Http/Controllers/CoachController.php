@@ -69,4 +69,29 @@ class CoachController extends Controller
         $success_message = "Coach was updated successfully";
         return response()->json($success_message);
     }
+
+    public function paginate()
+    {
+        $sortField = request('sortField', "name");
+        if (!in_array($sortField, ['name']))
+            $sortField = "name";
+
+        $sortDirection = request('sortDirection', "desc");
+        if (!in_array($sortDirection, ['asc', 'desc']))
+            $sortDirection = "desc";
+
+        try {
+            $coaches = Coach::when(request("search"), function ($q) {
+                $q->where(function ($query) {
+                    $query->where("name", "like", "%" . request("search") . "%");
+            
+                });
+            })->orderBy($sortField, $sortDirection)->paginate(5);
+        } catch (\Throwable $th) {
+            return $this->createResponse(500, [], false, "server error");
+        }
+
+        return $coaches;
+    }
+
 }

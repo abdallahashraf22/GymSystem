@@ -62,6 +62,7 @@ Route::delete('/gymmanagers/{gymmanager}', [GymMangerController::class, "destroy
 Route::get('/sessions', [SessionController::class, 'index']);
 Route::get('/sessions/paginate', [SessionController::class, 'paginate']);
 Route::get('/oldsessions', [SessionController::class, 'get_old_sessions']);
+Route::get('/oldsessions/paginate', [SessionController::class, 'oldPaginate']);
 Route::post('/sessions', [SessionController::class, 'store']);
 Route::get('/sessions/{session}', [SessionController::class, 'show']);
 Route::put('/sessions/{session}', [SessionController::class, 'update']);
@@ -85,6 +86,7 @@ Route::delete('/packages/{package}', [PackageController::class, 'destroy']);
 
 #### coaches routes ####
 Route::get('/coaches', [CoachController::class, 'index']);
+Route::get('/coaches/paginate', [CoachController::class, 'paginate']);
 Route::post('/coaches', [CoachController::class, 'store']);
 Route::get('/coaches/{coach}', [CoachController::class, 'show']);
 Route::post('/coaches/{coach}', [CoachController::class, 'update']);
