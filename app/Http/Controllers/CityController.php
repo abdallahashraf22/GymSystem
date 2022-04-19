@@ -59,10 +59,12 @@ class CityController extends Controller
 
     public function update(UpdateRequest $request, $cityId)
     {
+        $imageName = $this->uploadImage("cities", $request->file('image'));
         try {
             $city = City::findOrFail($cityId);
             $city->update([
                 "name" => $request->name,
+                "image_url" => $imageName
             ]);
         } catch (\Exception $e) {
             return $this->createResponse(500, [], false, $e->getMessage());
