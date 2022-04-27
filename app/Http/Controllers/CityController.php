@@ -17,6 +17,12 @@ class CityController extends Controller
 {
     use ResponseTrait, UploadImageTrait;
 
+    public function __construct()
+    {
+        $this->middleware('auth:api');
+        $this->middleware('isAdmin');
+    }
+
     public function index()
     {
         $cities = DB::table('cities')

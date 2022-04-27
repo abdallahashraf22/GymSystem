@@ -12,6 +12,12 @@ class CityManagerController extends Controller
 {
     use ResponseTrait;
 
+    public function __construct()
+    {
+        $this->middleware('auth:api');
+        $this->middleware('isAdmin');
+    }
+
     # City Managers
     public function index()
     {
@@ -33,7 +39,6 @@ class CityManagerController extends Controller
             return $this->createResponse(500, [], false, "server error");
         }
         return $this->createResponse(200, $cityManager);
-
     }
 
     public function store(CreateRequest $request)
@@ -86,5 +91,4 @@ class CityManagerController extends Controller
         }
         return $this->createResponse(200, "Deleted Successfully");
     }
-
 }

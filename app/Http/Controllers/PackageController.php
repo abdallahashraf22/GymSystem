@@ -17,6 +17,12 @@ class PackageController extends Controller
     use UploadImageTrait;
     use ResponseTrait;
 
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware('isBranchManager');
+    }
+
     public function index()
     {
         $package = Package::get();

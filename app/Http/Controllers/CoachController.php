@@ -12,6 +12,12 @@ class CoachController extends Controller
 {
     use ResponseTrait, UploadImageTrait;
 
+    public function __construct()
+    {
+        $this->middleware('auth:api');
+        $this->middleware('isBranchManager');
+    }
+
     public function index()
     {
         $coach = Coach::get();
@@ -84,7 +90,6 @@ class CoachController extends Controller
             $coaches = Coach::when(request("search"), function ($q) {
                 $q->where(function ($query) {
                     $query->where("name", "like", "%" . request("search") . "%");
-            
                 });
             })->orderBy($sortField, $sortDirection)->paginate(5);
         } catch (\Throwable $th) {
@@ -93,5 +98,4 @@ class CoachController extends Controller
 
         return $coaches;
     }
-
 }

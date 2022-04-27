@@ -14,9 +14,14 @@ class AttendanceController extends Controller
 
     use ResponseTrait;
 
+    public function __construct()
+    {
+        $this->middleware('auth:api');
+        $this->middleware('isBranchManager')->except(["store"]);
+    }
+
     public function index()
     {
-
     }
 
 

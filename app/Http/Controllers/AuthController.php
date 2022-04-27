@@ -59,10 +59,10 @@ class AuthController extends Controller
         $credentials = request(['email', 'password']);
 
         if (!$token = JWTAuth::attempt($credentials)) {
-            // return response()->json(['error' => 'Unauthorized'], 401);
             return $this->createResponse(200, [], false, ["message" => "email or password are in correct"]);
         }
-        $user = User::where('email', request('email'));
+        $user = User::where('email', request('email'))->get()[0];
+
         $user->update([
             'last_login' => now()
         ]);
@@ -91,7 +91,6 @@ class AuthController extends Controller
             event(new Verified($user));
             $message = "You Have Verified your Email Successfully";
             $user->notify(new GreetVerifiedUser());
-
         }
 
         return view("Verify", ["message" => $message]);

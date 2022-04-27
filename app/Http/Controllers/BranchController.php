@@ -14,8 +14,10 @@ class BranchController extends Controller
 {
     use ResponseTrait, PaginatorTrait, UploadImageTrait;
 
+
     public function __construct()
     {
+        $this->middleware('auth:api');
         $this->middleware('isCityManager');
     }
 
